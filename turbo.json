@@ -1,0 +1,18 @@
+{
+	"$schema": "https://turborepo.dev/schema.json",
+	"ui": "tui",
+	"tasks": {
+		"dev": {
+			"env": [
+				"CONVEX_URL",
+				"CONVEX_SITE_URL",
+				"CONVEX_DEPLOYMENT",
+				"EXPO_PUBLIC_CONVEX_URL"
+			],
+			"cache": false,
+			"persistent": true
+		},
+		"lint": {},
+		"build": {}
+	}
+}

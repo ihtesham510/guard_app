@@ -1,0 +1,33 @@
+{
+	"name": "guard_app",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"dev": "turbo run dev",
+		"lint": "turbo run lint",
+		"lint-fix": "bun --filter '*' lint-fix",
+		"build": "turbo run build",
+		"mobile:android": "bun --filter '@repo/mobile' android",
+		"mobile:ios": "bun --filter '@repo/mobile' ios",
+		"mobile:web": "bun --filter '@repo/mobile' web",
+		"mobile:android:development": "bun --filter '@repo/mobile' build:android:development",
+		"mobile:ios:development": "bun --filter '@repo/mobile' build:ios:development",
+		"mobile:android:production": "bun --filter '@repo/mobile' build:android:production",
+		"mobile:ios:production": "bun --filter '@repo/mobile' build:ios:production",
+		"format-apply": "biome format --write ."
+	},
+	"workspaces": [
+		"apps/*",
+		"packages/*"
+	],
+	"devDependencies": {
+		"@biomejs/biome": "2.4.4",
+		"@types/bun": "latest",
+		"chalk": "^5.6.2",
+		"turbo": "^2.8.10"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"packageManager": "bun@1.2.22"
+}

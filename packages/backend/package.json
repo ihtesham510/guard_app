@@ -1,0 +1,32 @@
+{
+	"name": "@repo/backend",
+	"type": "module",
+	"scripts": {
+		"dev": "bun env.ts && convex dev"
+	},
+	"exports": {
+		".": {
+			"types": "./convex/_generated/api.d.ts",
+			"default": "./convex/_generated/api.js"
+		},
+		"./dataModels": {
+			"types": "./convex/_generated/dataModel.d.ts",
+			"default": "./convex/_generated/dataModel.js"
+		},
+		"./server": {
+			"types": "./convex/_generated/server.d.ts",
+			"default": "./convex/_generated/server.js"
+		}
+	},
+	"private": true,
+	"devDependencies": {
+		"@types/bun": "latest",
+		"dotenv": "^17.3.1"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"dependencies": {
+		"convex": "^1.32.0"
+	}
+}
