@@ -1,15 +1,16 @@
 import { Image } from 'expo-image'
-import { Platform, StyleSheet } from 'react-native'
-
-import { Collapsible } from '@/components/ui/collapsible'
+import { Platform } from 'react-native'
 import { ExternalLink } from '@/components/external-link'
 import ParallaxScrollView from '@/components/parallax-scroll-view'
 import { ThemedText } from '@/components/themed-text'
 import { ThemedView } from '@/components/themed-view'
+import { Collapsible } from '@/components/ui/collapsible'
 import { IconSymbol } from '@/components/ui/icon-symbol'
 import { Fonts } from '@/constants/theme'
+import { createStyles, useStyles } from '@/hooks/use-styles'
 
 export default function TabTwoScreen() {
+	const { styles } = useStyles(styleSheet)
 	return (
 		<ParallaxScrollView
 			headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
@@ -85,9 +86,9 @@ export default function TabTwoScreen() {
 	)
 }
 
-const styles = StyleSheet.create({
+const styleSheet = createStyles(theme => ({
 	headerImage: {
-		color: '#808080',
+		color: theme.accent,
 		bottom: -90,
 		left: -35,
 		position: 'absolute',
@@ -96,4 +97,4 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		gap: 8,
 	},
-})
+}))

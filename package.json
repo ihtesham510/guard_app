@@ -3,7 +3,8 @@
 	"type": "module",
 	"private": true,
 	"scripts": {
-		"dev": "turbo run dev",
+		"dev": " turbo run dev",
+		"link": "bun env.ts",
 		"lint": "turbo run lint",
 		"lint-fix": "bun --filter '*' lint-fix",
 		"build": "turbo run build",

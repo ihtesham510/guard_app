@@ -3,23 +3,57 @@ import { Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import 'react-native-reanimated'
 
+import { ConvexBetterAuthProvider } from '@convex-dev/better-auth/react'
 import { ConvexProvider, ConvexReactClient } from 'convex/react'
-import type { PropsWithChildren } from 'react'
+import * as SplashScreen from 'expo-splash-screen'
+import { type PropsWithChildren, useEffect } from 'react'
 import { useColorScheme } from '@/hooks/use-color-scheme'
+import { authClient } from '@/lib/auth-client'
 
 export const unstable_settings = {
 	anchor: '(tabs)',
 }
 
+SplashScreen.preventAutoHideAsync()
+
 export default function RootLayout() {
 	return (
 		<Providers>
-			<Stack>
-				<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-				<Stack.Screen name='modal' options={{ presentation: 'modal', title: 'Modal' }} />
+			<App />
+		</Providers>
+	)
+}
+
+function App() {
+	const session = authClient.useSession()
+
+	useEffect(() => {
+		if (!session.isPending) {
+			SplashScreen.hide()
+		}
+	}, [session.isPending])
+
+	if (session.isPending) return null
+	return (
+		<>
+			<Stack
+				screenOptions={{
+					animation: 'none',
+				}}
+			>
+				<Stack.Protected guard={!session.isPending && !session.data}>
+					<Stack.Screen name='index' options={{ headerShown: false }} />
+				</Stack.Protected>
+
+				<Stack.Protected guard={!session.isPending && !session.data}>
+					<Stack.Screen name='sign-up' options={{ headerShown: false }} />
+				</Stack.Protected>
+				<Stack.Protected guard={!session.isPending && !!session.data}>
+					<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+				</Stack.Protected>
 			</Stack>
 			<StatusBar style='auto' />
-		</Providers>
+		</>
 	)
 }
 
@@ -30,7 +64,9 @@ function Providers({ children }: PropsWithChildren) {
 	const client = new ConvexReactClient(convex_url)
 	return (
 		<ConvexProvider client={client}>
-			<ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>{children}</ThemeProvider>
+			<ConvexBetterAuthProvider client={client} authClient={authClient}>
+				<ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>{children}</ThemeProvider>
+			</ConvexBetterAuthProvider>
 		</ConvexProvider>
 	)
 }
