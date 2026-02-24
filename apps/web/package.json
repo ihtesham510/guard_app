@@ -8,8 +8,9 @@
 	"scripts": {
 		"dev": "vite dev --port 3000",
 		"build": "vite build",
-		"lint": "tsc && biome lint && react-doctor .",
+		"lint": "tsc && biome lint ",
 		"lint-fix": "biome lint . --fix && react-doctor . --fix",
+		"doctor": "react-doctor --lint --dead-code --score .",
 		"test": "vitest run"
 	},
 	"dependencies": {

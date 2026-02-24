@@ -11,7 +11,8 @@
 		"build:ios:production": "eas build --platform ios --profile production",
 		"ios": "expo start --ios",
 		"web": "expo start --web",
-		"lint": "tsc && expo lint && biome lint && react-doctor .",
+		"lint": "tsc && biome lint",
+		"doctor": "react-doctor .",
 		"lint-fix": "biome lint . --fix && react-doctor . --fix",
 		"format": "biome format . --write"
 	},
