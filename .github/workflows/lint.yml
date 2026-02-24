@@ -18,7 +18,7 @@ jobs:
           bun-version: latest
       - run: bun install
       - run: bun lint
-  check-lint:
+  check-doctor:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,4 +26,4 @@ jobs:
         with:
           bun-version: latest
       - run: bun install
-      - run: bun doctor 
+      - run: bun doctor
