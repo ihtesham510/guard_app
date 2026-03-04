@@ -1,5 +1,6 @@
 import { v } from 'convex/values'
-import { mutation } from './_generated/server'
+import { mutation, query } from './_generated/server'
+import { getUser } from './auth'
 import { employeeSchema } from './schema'
 
 export const add_employee = mutation({
@@ -8,12 +9,17 @@ export const add_employee = mutation({
 		return await ctx.db.insert('employee', args)
 	},
 })
-export const update_employee = mutation({
-	args: { ...employeeSchema, id: v.id('employee') },
-	async handler(ctx, { id, ...rest }) {
-		return await ctx.db.patch('employee', id, rest)
+
+export const getEmployees = query({
+	async handler(ctx) {
+		const user = await getUser(ctx)
+		return await ctx.db
+			.query('employee')
+			.withIndex('by_userid', q => q.eq('userId', user._id))
+			.collect()
 	},
 })
+
 export const terminate_employee = mutation({
 	args: {
 		id: v.id('employee'),

@@ -16,7 +16,7 @@ export const fileSchema = v.object({
 })
 
 export const employeeSchema = v.object({
-	userId: v.id('user'),
+	userId: v.string(),
 	profile_picture: v.optional(v.string()),
 	employeeCode: v.string(),
 	firstName: v.string(),
@@ -61,6 +61,7 @@ export type ShiftSchema = Infer<typeof shiftSchema>
 
 export const siteSchema = v.object({
 	name: v.string(),
+	userId: v.string(),
 	company: v.optional(v.id('company')),
 	pictures: v.array(fileSchema),
 	address: addressSchema,
@@ -110,7 +111,7 @@ export default defineSchema({
 		email: v.string(),
 		phone: v.string(),
 		address: addressSchema,
-		userId: v.id('user'),
+		userId: v.string(),
 	}),
 	site: defineTable(siteSchema),
 	employee: defineTable(employeeSchema).index('by_userid', ['userId']).index('by_email', ['email']).index('by_phone', ['phone']),
