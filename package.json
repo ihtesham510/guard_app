@@ -16,7 +16,8 @@
 		"mobile:android:production": "bun --filter '@repo/mobile' build:android:production",
 		"mobile:ios:production": "bun --filter '@repo/mobile' build:ios:production",
 		"format-apply": "biome format --write .",
-		"doctor": "react-doctor --score -y --lint --dead-code --no-ami"
+		"doctor": "react-doctor -y --lint --dead-code --no-ami",
+		"doctor-check": "react-doctor -y --lint --dead-code --no-ami --diff"
 	},
 	"workspaces": [
 		"apps/*",
