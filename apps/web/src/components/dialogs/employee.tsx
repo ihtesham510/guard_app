@@ -26,20 +26,24 @@ import Stepper, { Step } from '@/components/ui/stepper'
 import { Textarea } from '@/components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useIsMobile } from '@/hooks/use-mobile'
+import { useSession } from '@/hooks/use-session'
 import { generateEmployeeCode } from '@/lib/utils'
 
 const schema = convexToZod(employeeSchema)
 
 export function EmployeeDialog({ open, onOpenChange }: { open?: boolean; onOpenChange?: (e: boolean) => void }) {
+	const { session } = useSession()
 	const [currentStep, setCurrentStep] = useState(1)
 	const addEmployee = useMutation(api.employee.add_employee)
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
 		defaultValues: {
+			userId: session.data!.user.id,
 			employeeCode: generateEmployeeCode(),
 			status: 'active',
 			position: 'employee',
-			hireDate: new Date(Date.now()).toString(),
+			hireDate: new Date().toISOString().split('T')[0],
+			address: undefined,
 		},
 	})
 	const isMobile = useIsMobile()
@@ -62,7 +66,7 @@ export function EmployeeDialog({ open, onOpenChange }: { open?: boolean; onOpenC
 	return (
 		<ResponsiveDialog open={open} onOpenChange={onOpenChange}>
 			<ResponsiveDialogContent>
-				<ResponsiveDialogForm form={form} onSubmit={form.handleSubmit(handleSubmit)}>
+				<ResponsiveDialogForm form={form} onSubmit={form.handleSubmit(handleSubmit, errors => console.log(errors))}>
 					<ResponsiveDialogHeader>
 						<ResponsiveDialogTitle>Add Employee</ResponsiveDialogTitle>
 					</ResponsiveDialogHeader>
