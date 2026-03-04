@@ -4,7 +4,7 @@ import { convex, crossDomain } from '@convex-dev/better-auth/plugins'
 import { betterAuth } from 'better-auth/minimal'
 import { components } from './_generated/api'
 import type { DataModel } from './_generated/dataModel'
-import { query } from './_generated/server'
+import { type MutationCtx, type QueryCtx, query } from './_generated/server'
 import authConfig from './auth.config'
 
 export const authComponent = createClient<DataModel>(components.betterAuth)
@@ -27,3 +27,7 @@ export const getCurrentUser = query({
 		return authComponent.getAuthUser(ctx)
 	},
 })
+
+export async function getUser(ctx: QueryCtx | MutationCtx) {
+	return await authComponent.getAuthUser(ctx)
+}

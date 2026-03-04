@@ -9,7 +9,7 @@
  */
 
 import type * as auth from "../auth.js";
-import type * as hellow from "../hellow.js";
+import type * as employee from "../employee.js";
 import type * as http from "../http.js";
 
 import type {
@@ -20,7 +20,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
-  hellow: typeof hellow;
+  employee: typeof employee;
   http: typeof http;
 }>;
 
