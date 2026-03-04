@@ -6,7 +6,7 @@ export const Route = createFileRoute('/(auth)/sign-in')({
 	beforeLoad: async ({ context: { session } }) => {
 		if (session.data) {
 			throw redirect({
-				to: '/',
+				to: '/dashboard',
 			})
 		}
 	},

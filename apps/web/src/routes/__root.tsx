@@ -3,10 +3,11 @@ import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 
 import '../styles.css'
-import type { ConvexReactClient } from 'convex/react'
+import type { authClient } from '@/lib/auth-client'
 
 export const Route = createRootRouteWithContext<{
-	convexClient: ConvexReactClient
+	authClient: typeof authClient
+	session: ReturnType<typeof authClient.useSession>
 }>()({
 	component: RootComponent,
 })

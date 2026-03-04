@@ -1,9 +1,10 @@
-import { ConvexBetterAuthProvider } from '@convex-dev/better-auth/react'
 import { createRouter, RouterProvider } from '@tanstack/react-router'
-import { ConvexProvider, ConvexReactClient } from 'convex/react'
 import ReactDOM from 'react-dom/client'
-import { authClient } from './lib/auth-client'
-import { routeTree } from './routeTree.gen'
+import { ConvexProvider } from '@/components/providers/convex-provider'
+import { Spinner } from '@/components/ui/spinner'
+import { ThemeProvider } from '@/context/theme-context'
+import { authClient } from '@/lib/auth-client'
+import { routeTree } from '@/routeTree.gen'
 
 const router = createRouter({
 	routeTree,
@@ -22,20 +23,24 @@ const rootElement = document.getElementById('app')!
 
 if (!rootElement.innerHTML) {
 	const root = ReactDOM.createRoot(rootElement)
-	root.render(<App />)
+	root.render(
+		<ThemeProvider>
+			<ConvexProvider>
+				<App />
+			</ConvexProvider>
+			,
+		</ThemeProvider>,
+	)
 }
 
 function App() {
-	const convex_url = import.meta.env.VITE_CONVEX_URL
-	if (!convex_url) throw new Error('Convex url not found')
-	const client = new ConvexReactClient(convex_url, {
-		expectAuth: true,
-	})
-	return (
-		<ConvexProvider client={client}>
-			<ConvexBetterAuthProvider client={client} authClient={authClient}>
-				<RouterProvider router={router} context={{ convexClient: client }} />
-			</ConvexBetterAuthProvider>
-		</ConvexProvider>
-	)
+	const session = authClient.useSession()
+	if (session.isPending) {
+		return (
+			<div className='flex justify-center items-center h-screen w-full'>
+				<Spinner className='size-8' />
+			</div>
+		)
+	}
+	return <RouterProvider router={router} context={{ authClient, session }} />
 }

@@ -1,9 +1,13 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
+import { SignUpForm } from '@/components/auth/sign-up-form'
 
 export const Route = createFileRoute('/(auth)/sign-up')({
-  component: RouteComponent,
+	component: SignUpForm,
+	beforeLoad({ context: { session } }) {
+		if (session.data) {
+			throw redirect({
+				to: '/dashboard',
+			})
+		}
+	},
 })
-
-function RouteComponent() {
-  return <div>Hello "/(auth)/sign-up"!</div>
-}
