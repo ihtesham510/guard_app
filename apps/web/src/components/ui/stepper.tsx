@@ -152,7 +152,7 @@ export default function Stepper({
 							{!isLastStep && (
 								<Button
 									onClick={handleNext}
-									type='submit'
+									type='button'
 									className='duration-350 flex items-center justify-center rounded-md font-medium tracking-tight transition'
 									{...nextButtonProps}
 								>
