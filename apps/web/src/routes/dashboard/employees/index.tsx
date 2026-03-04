@@ -1,9 +1,11 @@
 import { api } from '@repo/backend'
-import type { EmployeeSchema } from '@repo/backend/schema'
+import type { Doc } from '@repo/backend/dataModels'
 import { createFileRoute } from '@tanstack/react-router'
-import { useQuery } from 'convex/react'
+import { useQuery } from 'convex-helpers/react/cache'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+
+type Employee = Doc<'employee'>
 
 export const Route = createFileRoute('/dashboard/employees/')({
 	component: RouteComponent,
@@ -12,7 +14,6 @@ export const Route = createFileRoute('/dashboard/employees/')({
 function RouteComponent() {
 	const employees = useQuery(api.employee.getEmployees)
 
-	// Format date for display
 	const formatDate = (dateString: string) => {
 		return new Date(dateString).toLocaleDateString('en-US', {
 			year: 'numeric',
@@ -21,77 +22,70 @@ function RouteComponent() {
 		})
 	}
 
-	// Get status badge variant and custom styles
-	const getStatusBadgeProps = (status: EmployeeSchema['status']) => {
+	const getStatusBadgeProps = (status: Employee['status']) => {
 		switch (status) {
 			case 'active':
-				// Success green using chart colors
 				return {
 					variant: 'default' as const,
-					className: 'bg-chart-4/20 text-chart-4 hover:bg-chart-4/30 border-chart-4/30'
+					className: 'bg-chart-4/20 text-chart-4 hover:bg-chart-4/30 border-chart-4/30',
 				}
 			case 'inactive':
-				// Warning yellow using chart colors
 				return {
 					variant: 'secondary' as const,
-					className: 'bg-chart-5/20 text-chart-5 hover:bg-chart-5/30 border-chart-5/30'
+					className: 'bg-chart-5/20 text-chart-5 hover:bg-chart-5/30 border-chart-5/30',
 				}
 			case 'terminated':
-				// Destructive red
 				return {
 					variant: 'destructive' as const,
-					className: ''
+					className: '',
 				}
 			default:
 				return {
 					variant: 'outline' as const,
-					className: ''
+					className: '',
 				}
 		}
 	}
 
-	// Get position badge variant
-	const getPositionBadgeProps = (position: EmployeeSchema['position']) => {
+	const getPositionBadgeProps = (position: Employee['position']) => {
 		switch (position) {
 			case 'supervisor':
 				return {
 					variant: 'default' as const,
-					className: ''
+					className: '',
 				}
 			case 'senior':
 				return {
 					variant: 'secondary' as const,
-					className: ''
+					className: '',
 				}
 			case 'employee':
 				return {
 					variant: 'outline' as const,
-					className: ''
+					className: '',
 				}
 			default:
 				return {
 					variant: 'outline' as const,
-					className: ''
+					className: '',
 				}
 		}
 	}
 
-	// Loading state
 	if (employees === undefined) {
 		return (
-			<div className='flex items-center justify-center min-h-[400px]'>
+			<div className='flex items-center justify-center min-h-100'>
 				<div className='text-center'>
-					<div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto'></div>
+					<div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto' />
 					<p className='mt-4 text-muted-foreground'>Loading employees...</p>
 				</div>
 			</div>
 		)
 	}
 
-	// Empty state
 	if (employees && employees.length === 0) {
 		return (
-			<div className='flex items-center justify-center min-h-[400px]'>
+			<div className='flex items-center justify-center min-h-100'>
 				<div className='text-center'>
 					<svg className='mx-auto h-12 w-12 text-muted-foreground' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
 						<title>no Employee</title>
@@ -114,7 +108,9 @@ function RouteComponent() {
 			<div className='sm:flex sm:items-center'>
 				<div className='sm:flex-auto'>
 					<h1 className='text-xl font-semibold text-foreground'>Employees</h1>
-					<p className='mt-2 text-sm text-muted-foreground'>A list of all employees including their contact details, position, and status.</p>
+					<p className='mt-2 text-sm text-muted-foreground'>
+						A list of all employees including their contact details, position, and status.
+					</p>
 				</div>
 			</div>
 			<div className='mt-8 flex flex-col'>
@@ -142,7 +138,7 @@ function RouteComponent() {
 									</tr>
 								</thead>
 								<tbody className='divide-y divide-border bg-card'>
-									{employees.map((employee: EmployeeSchema & { _id: string }) => {
+									{employees.map((employee: Employee & { _id: string }) => {
 										const statusProps = getStatusBadgeProps(employee.status)
 										const positionProps = getPositionBadgeProps(employee.position)
 
@@ -151,7 +147,11 @@ function RouteComponent() {
 												<td className='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-foreground sm:pl-6'>
 													<div className='flex items-center'>
 														{employee.profile_picture ? (
-															<img className='h-10 w-10 rounded-full' src={employee.profile_picture} alt={`${employee.firstName} ${employee.lastName}`} />
+															<img
+																className='h-10 w-10 rounded-full'
+																src={employee.profile_picture}
+																alt={`${employee.firstName} ${employee.lastName}`}
+															/>
 														) : (
 															<div className='h-10 w-10 rounded-full bg-muted flex items-center justify-center'>
 																<span className='text-sm font-medium text-muted-foreground'>
@@ -175,21 +175,13 @@ function RouteComponent() {
 													</div>
 												</td>
 												<td className='whitespace-nowrap px-3 py-4 text-sm'>
-													<Badge
-														variant={positionProps.variant}
-														className={cn(positionProps.className)}
-													>
+													<Badge variant={positionProps.variant} className={cn(positionProps.className)}>
 														{employee.position}
 													</Badge>
 												</td>
-												<td className='whitespace-nowrap px-3 py-4 text-sm text-muted-foreground'>
-													{formatDate(employee.hireDate)}
-												</td>
+												<td className='whitespace-nowrap px-3 py-4 text-sm text-muted-foreground'>{formatDate(employee.hireDate)}</td>
 												<td className='whitespace-nowrap px-3 py-4 text-sm'>
-													<Badge
-														variant={statusProps.variant}
-														className={cn(statusProps.className)}
-													>
+													<Badge variant={statusProps.variant} className={cn(statusProps.className)}>
 														{employee.status}
 													</Badge>
 												</td>

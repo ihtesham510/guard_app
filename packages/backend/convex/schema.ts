@@ -105,30 +105,37 @@ const leaveRequestSchema = v.object({
 })
 export type LeaveRequestSchema = Infer<typeof leaveRequestSchema>
 
+export const companySchema = v.object({
+	name: v.string(),
+	email: v.string(),
+	phone: v.string(),
+	address: addressSchema,
+	userId: v.string(),
+})
+export type CompanySchema = Infer<typeof companySchema>
+
+export const shiftAssignmentSchema = v.object({
+	employee: v.id('employee'),
+	shift: v.id('shift'),
+	assign_date: v.string(),
+})
+export type ShiftAssignmentSchema = Infer<typeof shiftAssignmentSchema>
+
+export const shiftAssignmentRequestSchema = v.object({
+	employee: v.id('employee'),
+	shift: v.id('shift'),
+	status: v.union(v.literal('pending'), v.literal('accepted'), v.literal('rejected'), v.literal('cancelled')),
+	rejectionReason: v.optional(v.string()),
+})
+export type ShiftAssignmentRequestSchema = Infer<typeof shiftAssignmentRequestSchema>
+
 export default defineSchema({
-	company: defineTable({
-		name: v.string(),
-		email: v.string(),
-		phone: v.string(),
-		address: addressSchema,
-		userId: v.string(),
-	}),
-	site: defineTable(siteSchema),
+	company: defineTable(companySchema).index('by_userid', ['userId']),
+	site: defineTable(siteSchema).index('by_company', ['company']).index('by_userid', ['userId']),
 	employee: defineTable(employeeSchema).index('by_userid', ['userId']).index('by_email', ['email']).index('by_phone', ['phone']),
 	shift: defineTable(shiftSchema).index('by_site', ['site']),
-	shift_assignment: defineTable({
-		employee: v.id('employee'),
-		shift: v.id('shift'),
-		assign_date: v.string(),
-	})
-		.index('by_employee', ['employee'])
-		.index('by_shift', ['shift']),
-	shift_assignment_request: defineTable({
-		employee: v.id('employee'),
-		shift: v.id('shift'),
-		status: v.union(v.literal('pending'), v.literal('accepted'), v.literal('rejected'), v.literal('cancelled')),
-		rejectionReason: v.optional(v.string()),
-	}).index('by_employee', ['employee']),
+	shift_assignment: defineTable(shiftAssignmentSchema).index('by_employee', ['employee']).index('by_shift', ['shift']),
+	shift_assignment_request: defineTable(shiftAssignmentRequestSchema).index('by_employee', ['employee']),
 	time_entry: defineTable(timeEntrySchema).index('by_shift', ['shift']).index('by_employee', ['employee']),
 	leave_request: defineTable(leaveRequestSchema).index('by_employee', ['employee']),
 })

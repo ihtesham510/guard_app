@@ -54,14 +54,14 @@ export function useRoutes() {
 					}),
 				},
 				{
-					title: 'Schedules',
-					icon: CalendarFold,
-					description: "See you're schedules for employees and sites",
+					title: 'Companies',
+					description: "See and mange you're companies",
+					icon: Building2,
 					href: {
-						to: '/dashboard/schedules',
+						to: '/dashboard/companies',
 					},
 					isActive: !!route({
-						to: '/dashboard/schedules',
+						to: '/dashboard/companies',
 						fuzzy: false,
 					}),
 				},
@@ -78,18 +78,6 @@ export function useRoutes() {
 					}),
 				},
 				{
-					title: 'Companies',
-					description: "See and mange you're companies",
-					icon: Building2,
-					href: {
-						to: '/dashboard/companies',
-					},
-					isActive: !!route({
-						to: '/dashboard/companies',
-						fuzzy: false,
-					}),
-				},
-				{
 					title: 'Sites',
 					icon: Navigation,
 					description: "See and mange you're sites",
@@ -98,6 +86,18 @@ export function useRoutes() {
 					},
 					isActive: !!route({
 						to: '/dashboard/sites',
+						fuzzy: false,
+					}),
+				},
+				{
+					title: 'Schedules',
+					icon: CalendarFold,
+					description: "See you're schedules for employees and sites",
+					href: {
+						to: '/dashboard/schedules',
+					},
+					isActive: !!route({
+						to: '/dashboard/schedules',
 						fuzzy: false,
 					}),
 				},
