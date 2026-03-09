@@ -10,6 +10,17 @@ export const addressSchema = v.object({
 	country: v.string(),
 })
 
+export const locationSchema = v.union(
+	v.object({
+		polygon: v.array(v.array(v.float64())),
+	}),
+	v.object({
+		coordinates: v.array(v.float64()),
+		radius: v.float64(), // in meters
+	}),
+)
+export type LocationSchema = Infer<typeof locationSchema>
+
 export const fileSchema = v.object({
 	url: v.string(),
 	storage_id: v.id('_storage'),
@@ -65,10 +76,7 @@ export const siteSchema = v.object({
 	company: v.optional(v.id('company')),
 	pictures: v.array(fileSchema),
 	address: addressSchema,
-	location: v.object({
-		long: v.string(),
-		lat: v.string(),
-	}),
+	location: locationSchema,
 	contactInformation: v.optional(
 		v.object({
 			name: v.string(),

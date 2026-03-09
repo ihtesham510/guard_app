@@ -26,19 +26,16 @@ import Stepper, { Step } from '@/components/ui/stepper'
 import { Textarea } from '@/components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useIsMobile } from '@/hooks/use-mobile'
-import { useSession } from '@/hooks/use-session'
 import { generateEmployeeCode } from '@/lib/utils'
 
-const schema = convexToZod(employeeSchema)
+const schema = convexToZod(employeeSchema.omit('userId'))
 
 export function EmployeeDialog({ open, onOpenChange }: { open?: boolean; onOpenChange?: (e: boolean) => void }) {
-	const { session } = useSession()
 	const [currentStep, setCurrentStep] = useState(1)
 	const addEmployee = useMutation(api.employee.add_employee)
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
 		defaultValues: {
-			userId: session.data!.user.id,
 			employeeCode: generateEmployeeCode(),
 			status: 'active',
 			position: 'employee',

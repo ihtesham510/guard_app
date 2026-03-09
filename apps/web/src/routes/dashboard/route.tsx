@@ -1,14 +1,21 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { Bell } from 'lucide-react'
 import { ThemeToggle } from '@/components/common/theme-toggle'
+import { Dialogs } from '@/components/dialogs'
 import { AppSidebar } from '@/components/sidebar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
+import { DialogStateContextProvider } from '@/context/dialog-state-context'
 import { useSession } from '@/hooks/use-session'
 
 export const Route = createFileRoute('/dashboard')({
-	component: RouteComponent,
+	component: () => (
+		<DialogStateContextProvider>
+			<Dialogs />
+			<RouteComponent />
+		</DialogStateContextProvider>
+	),
 	beforeLoad({ context: { session } }) {
 		if (!session.data) {
 			throw redirect({

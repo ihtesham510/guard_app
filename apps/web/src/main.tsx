@@ -1,5 +1,6 @@
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 import ReactDOM from 'react-dom/client'
+import { Toaster } from 'sonner'
 import { ConvexProvider } from '@/components/providers/convex-provider'
 import { Spinner } from '@/components/ui/spinner'
 import { ThemeProvider } from '@/context/theme-context'
@@ -26,9 +27,9 @@ if (!rootElement.innerHTML) {
 	root.render(
 		<ThemeProvider>
 			<ConvexProvider>
+				<Toaster />
 				<App />
 			</ConvexProvider>
-			,
 		</ThemeProvider>,
 	)
 }

@@ -12,6 +12,7 @@ import type * as auth from "../auth.js";
 import type * as company from "../company.js";
 import type * as employee from "../employee.js";
 import type * as http from "../http.js";
+import type * as shift from "../shift.js";
 import type * as sites from "../sites.js";
 
 import type {
@@ -25,6 +26,7 @@ declare const fullApi: ApiFromModules<{
   company: typeof company;
   employee: typeof employee;
   http: typeof http;
+  shift: typeof shift;
   sites: typeof sites;
 }>;
 

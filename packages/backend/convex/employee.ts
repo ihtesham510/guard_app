@@ -4,9 +4,11 @@ import { getUser } from './auth'
 import { employeeSchema } from './schema'
 
 export const add_employee = mutation({
-	args: employeeSchema,
+	args: employeeSchema.omit('userId'),
 	async handler(ctx, args) {
-		return await ctx.db.insert('employee', args)
+		const user = await getUser(ctx)
+		const userId = user._id
+		return await ctx.db.insert('employee', { ...args, userId })
 	},
 })
 
