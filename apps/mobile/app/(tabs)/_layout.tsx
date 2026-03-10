@@ -1,7 +1,8 @@
+import { CalendarAnalysisIcon, Clock04Icon, Home04Icon, User03Icon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react-native'
 import { Tabs } from 'expo-router'
-
 import { HapticTab } from '@/components/haptic-tab'
-import { IconSymbol } from '@/components/ui/icon-symbol'
+import { TabBar } from '@/components/tab-bar'
 import { Colors } from '@/constants/theme'
 import { useColorScheme } from '@/hooks/use-color-scheme'
 
@@ -15,19 +16,42 @@ export default function TabLayout() {
 				headerShown: false,
 				tabBarButton: HapticTab,
 			}}
+			tabBar={props => <TabBar {...props} />}
 		>
 			<Tabs.Screen
 				name='index'
 				options={{
 					title: 'Home',
-					tabBarIcon: ({ color }) => <IconSymbol size={28} name='house.fill' color={color} />,
+					tabBarIcon: ({ color, size, focused }) => (
+						<HugeiconsIcon icon={Home04Icon} color={color} size={size} strokeWidth={focused ? 2 : 1.4} />
+					),
 				}}
 			/>
 			<Tabs.Screen
-				name='explore'
+				name='shifts'
 				options={{
-					title: 'Explore',
-					tabBarIcon: ({ color }) => <IconSymbol size={28} name='paperplane.fill' color={color} />,
+					title: 'Shifts',
+					tabBarIcon: ({ color, size, focused }) => (
+						<HugeiconsIcon icon={Clock04Icon} color={color} size={size} strokeWidth={focused ? 2 : 1.4} />
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name='attendance'
+				options={{
+					title: 'Attendance',
+					tabBarIcon: ({ color, size, focused }) => (
+						<HugeiconsIcon icon={CalendarAnalysisIcon} color={color} size={size} strokeWidth={focused ? 2 : 1.4} />
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name='profile'
+				options={{
+					title: 'Profile',
+					tabBarIcon: ({ color, size, focused }) => (
+						<HugeiconsIcon icon={User03Icon} color={color} size={size} strokeWidth={focused ? 2 : 1.4} />
+					),
 				}}
 			/>
 		</Tabs>
