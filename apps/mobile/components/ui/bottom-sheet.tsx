@@ -1,9 +1,9 @@
 import {
-	BottomSheetModal,
 	BottomSheetBackdrop,
+	type BottomSheetBackdropProps,
+	BottomSheetModal,
 	type BottomSheetModalProps,
 	BottomSheetView,
-	type BottomSheetBackdropProps,
 } from '@gorhom/bottom-sheet'
 import { createContext, type PropsWithChildren, useCallback, useContext, useRef } from 'react'
 import type { PressableProps, StyleProp, ViewStyle } from 'react-native'
