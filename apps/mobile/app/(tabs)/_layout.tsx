@@ -5,55 +5,58 @@ import { HapticTab } from '@/components/haptic-tab'
 import { TabBar } from '@/components/tab-bar'
 import { Colors } from '@/constants/theme'
 import { useColorScheme } from '@/hooks/use-color-scheme'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function TabLayout() {
 	const colorScheme = useColorScheme()
 
 	return (
-		<Tabs
-			screenOptions={{
-				tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-				headerShown: false,
-				tabBarButton: HapticTab,
-			}}
-			tabBar={props => <TabBar {...props} />}
-		>
-			<Tabs.Screen
-				name='index'
-				options={{
-					title: 'Home',
-					tabBarIcon: ({ color, size, focused }) => (
-						<HugeiconsIcon icon={Home04Icon} color={color} size={size} strokeWidth={focused ? 2 : 1.4} />
-					),
+		<SafeAreaView style={{ flex: 1 }}>
+			<Tabs
+				screenOptions={{
+					tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+					headerShown: false,
+					tabBarButton: HapticTab,
 				}}
-			/>
-			<Tabs.Screen
-				name='shifts'
-				options={{
-					title: 'Shifts',
-					tabBarIcon: ({ color, size, focused }) => (
-						<HugeiconsIcon icon={Clock04Icon} color={color} size={size} strokeWidth={focused ? 2 : 1.4} />
-					),
-				}}
-			/>
-			<Tabs.Screen
-				name='attendance'
-				options={{
-					title: 'Attendance',
-					tabBarIcon: ({ color, size, focused }) => (
-						<HugeiconsIcon icon={CalendarAnalysisIcon} color={color} size={size} strokeWidth={focused ? 2 : 1.4} />
-					),
-				}}
-			/>
-			<Tabs.Screen
-				name='profile'
-				options={{
-					title: 'Profile',
-					tabBarIcon: ({ color, size, focused }) => (
-						<HugeiconsIcon icon={User03Icon} color={color} size={size} strokeWidth={focused ? 2 : 1.4} />
-					),
-				}}
-			/>
-		</Tabs>
+				tabBar={props => <TabBar {...props} />}
+			>
+				<Tabs.Screen
+					name='index'
+					options={{
+						title: 'Home',
+						tabBarIcon: ({ color, size, focused }) => (
+							<HugeiconsIcon icon={Home04Icon} color={color} size={size} strokeWidth={focused ? 2 : 1.4} />
+						),
+					}}
+				/>
+				<Tabs.Screen
+					name='shifts'
+					options={{
+						title: 'Shifts',
+						tabBarIcon: ({ color, size, focused }) => (
+							<HugeiconsIcon icon={Clock04Icon} color={color} size={size} strokeWidth={focused ? 2 : 1.4} />
+						),
+					}}
+				/>
+				<Tabs.Screen
+					name='attendance'
+					options={{
+						title: 'Attendance',
+						tabBarIcon: ({ color, size, focused }) => (
+							<HugeiconsIcon icon={CalendarAnalysisIcon} color={color} size={size} strokeWidth={focused ? 2 : 1.4} />
+						),
+					}}
+				/>
+				<Tabs.Screen
+					name='profile'
+					options={{
+						title: 'Profile',
+						tabBarIcon: ({ color, size, focused }) => (
+							<HugeiconsIcon icon={User03Icon} color={color} size={size} strokeWidth={focused ? 2 : 1.4} />
+						),
+					}}
+				/>
+			</Tabs>
+		</SafeAreaView>
 	)
 }

@@ -1,7 +1,18 @@
-import { DAYS, eachMonthOfInterval, endOfYear, format, generateCalendar, isSameDay, startOfYear } from '@repo/shared'
-import { useEffect, useState } from 'react'
+import {
+	DAYS,
+	eachDayOfInterval,
+	eachMonthOfInterval,
+	endOfMonth,
+	endOfYear,
+	format,
+	generateCalendar,
+	isSameDay,
+	isSameMonth,
+	startOfMonth,
+	startOfYear,
+} from '@repo/shared'
+import { useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import Animated, { interpolate, useAnimatedStyle, useSharedValue, withClamp, withSpring } from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ThemedView } from '@/components/themed-view'
 import { createStyles, useStyles } from '@/hooks/use-styles'
@@ -79,9 +90,6 @@ export function Calendar() {
 							))}
 						</ThemedView>
 					))}
-					{/* <ThemedView> */}
-					{/* 	<DateSelector current={selectedDate} onChange={() => {}} /> */}
-					{/* </ThemedView> */}
 				</ThemedView>
 			</ThemedView>
 		</SafeAreaView>
@@ -93,18 +101,48 @@ export function DateSelector({ current, onChange }: { current: Date; onChange: (
 		start: startOfYear(current),
 		end: endOfYear(current),
 	}).map(date => ({ label: format(date, 'MMM'), date }))
+	const days = eachDayOfInterval({
+		start: startOfMonth(current),
+		end: endOfMonth(current),
+	})
 
 	return (
-		<WheelPicker
-			render={item => {
-				return <ThemedText>{item.label}</ThemedText>
+		<View
+			style={{
+				flex: 1,
+				alignItems: 'center',
+				justifyContent: 'center',
+				flexDirection: 'row',
+				gap: 20,
+				width: '100%',
+				paddingHorizontal: 30,
 			}}
-			items={months}
-			initialIndex={0}
-			onSelect={item => {
-				onChange(item.date)
-			}}
-		/>
+		>
+			<WheelPicker
+				style={{ flex: 1, width: '50%' }}
+				render={item => {
+					return <ThemedText>{item.getDate()}</ThemedText>
+				}}
+				items={days}
+				initialIndex={days.findIndex(item => isSameDay(item, current))}
+				indexSelected={days.findIndex(item => isSameDay(item, current))}
+				onSelect={item => {
+					onChange(item)
+				}}
+			/>
+			<WheelPicker
+				style={{ flex: 1, width: '50%' }}
+				initialIndex={months.findIndex(item => isSameMonth(item.date, current))}
+				indexSelected={months.findIndex(item => isSameMonth(item.date, current))}
+				render={item => {
+					return <ThemedText>{item.label}</ThemedText>
+				}}
+				items={months}
+				onSelect={item => {
+					onChange(item.date)
+				}}
+			/>
+		</View>
 	)
 }
 

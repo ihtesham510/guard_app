@@ -1,7 +1,10 @@
-import { type ReactNode, useRef, useState } from 'react'
+import { type ReactNode, useEffect, useRef, useState } from 'react'
 import { type NativeScrollEvent, type NativeSyntheticEvent, Pressable, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { createStyles, useStyles } from '@/hooks/use-styles'
+import { useDebouncedCallback } from '@mantine/hooks'
+import Animated, { interpolate, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
+import type { StyleProp, ViewStyle } from 'react-native'
 
 const ITEM_HEIGHT = 50
 const VISIBLE_ITEMS = 5
@@ -13,16 +16,22 @@ export interface DateItem {
 
 interface WheelPickerProps<T> {
 	items: T[]
+	selected?: T
 	onSelect?: (item: T) => void
+	indexSelected?: number
 	render: (item: T, isSelected: boolean) => ReactNode
 	initialIndex?: number
+	style?: StyleProp<ViewStyle>
 }
 
-export function WheelPicker<T>({ items, onSelect, initialIndex = 0, render }: WheelPickerProps<T>) {
+export function WheelPicker<T>({ items, onSelect, initialIndex = 0, render, style, selected, indexSelected }: WheelPickerProps<T>) {
 	const { styles } = useStyles(styleSheet)
 	const scrollRef = useRef<ScrollView>(null)
 	const selectedIndexRef = useRef<number>(initialIndex)
 	const [selectedIndex, setSelectedIndex] = useState<number>(initialIndex)
+	const debouce = useDebouncedCallback((clamped: number) => {
+		onSelect?.(items[clamped])
+	}, 300)
 
 	const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>): void => {
 		const y = event.nativeEvent.contentOffset.y
@@ -31,25 +40,43 @@ export function WheelPicker<T>({ items, onSelect, initialIndex = 0, render }: Wh
 		if (clamped !== selectedIndexRef.current) {
 			selectedIndexRef.current = clamped
 			setSelectedIndex(clamped)
-			onSelect?.(items[clamped])
+			debouce(clamped)
 		}
 	}
 
 	const scrollToIndex = (index: number): void => {
 		selectedIndexRef.current = index
 		scrollRef.current?.scrollTo({ y: index * ITEM_HEIGHT, animated: true })
+		setSelectedIndex(index)
 	}
 
-	return (
-		<View style={styles.wheelContainer}>
-			<View style={styles.selectionHighlight} pointerEvents='none' />
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <cannot use function because it causes infinite loop>
+	useEffect(() => {
+		if (selected) {
+			const index = items.indexOf(selected)
+			if (index !== -1) {
+				scrollToIndex(index)
+			}
+		}
+	}, [selected])
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <cannot use function because it causes infinite loop>
+	useEffect(() => {
+		if (indexSelected !== undefined && selectedIndex !== -1) {
+			scrollToIndex(indexSelected)
+		}
+	}, [indexSelected])
+
+	return (
+		<View style={[styles.wheelContainer, style]}>
+			<View style={styles.selectionHighlight} pointerEvents='none' />
 			<ScrollView
 				ref={scrollRef}
 				showsVerticalScrollIndicator={false}
 				snapToInterval={ITEM_HEIGHT}
 				decelerationRate='fast'
-				onMomentumScrollEnd={handleScroll}
+				onScroll={handleScroll}
+				scrollEventThrottle={40}
 				contentContainerStyle={{
 					paddingVertical: ITEM_HEIGHT * Math.floor(VISIBLE_ITEMS / 2),
 				}}
@@ -59,13 +86,13 @@ export function WheelPicker<T>({ items, onSelect, initialIndex = 0, render }: Wh
 					<RenderItem
 						item={item}
 						index={index}
+						selectedIndex={selectedIndex}
 						onSelect={(e, i) => {
 							onSelect?.(e)
 							selectedIndexRef.current = i
 							setSelectedIndex(i)
 							scrollToIndex(i)
 						}}
-						selectedIndex={selectedIndex}
 						key={index}
 					>
 						{render(item, index === selectedIndex)}
@@ -79,8 +106,8 @@ function RenderItem<T>({
 	children,
 	item,
 	index,
-	selectedIndex,
 	onSelect,
+	selectedIndex,
 }: {
 	item: T
 	index: number
@@ -89,12 +116,25 @@ function RenderItem<T>({
 	children: ReactNode
 }) {
 	const { styles } = useStyles(styleSheet)
-	const distance = Math.abs(index - selectedIndex)
-	const opacity = distance === 0 ? 1 : distance === 1 ? 0.6 : 0.3
-	const scale = distance === 0 ? 1 : distance === 1 ? 0.9 : 0.8
+	const scaleValue = useSharedValue(0)
+	const opacityValue = useSharedValue(0)
+	useEffect(() => {
+		scaleValue.value = withSpring(selectedIndex === index ? 1 : 0, {
+			duration: 30,
+		})
+		opacityValue.value = selectedIndex === index ? 1 : selectedIndex - 1 === index || selectedIndex + 1 === index ? 0.5 : 0
+	}, [selectedIndex, index, scaleValue, opacityValue])
+	const animatedStyle = useAnimatedStyle(() => {
+		const scale = interpolate(scaleValue.value, [0, 1], [1, 1.5], 'clamp')
+		const opacity = interpolate(opacityValue.value, [0, 0.5, 1], [0.2, 0.5, 1], 'clamp')
+		return {
+			transform: [{ scale }],
+			opacity,
+		}
+	})
 
 	return (
-		<View key={index} style={styles.item}>
+		<Animated.View key={index} style={[styles.item, animatedStyle]}>
 			<Pressable
 				onPress={() => {
 					onSelect?.(item, index)
@@ -102,7 +142,7 @@ function RenderItem<T>({
 			>
 				{children}
 			</Pressable>
-		</View>
+		</Animated.View>
 	)
 }
 
@@ -115,7 +155,6 @@ const styleSheet = createStyles(theme => ({
 	},
 	wheelContainer: {
 		height: ITEM_HEIGHT * VISIBLE_ITEMS,
-		width: '100%',
 		position: 'relative',
 	},
 	selectionHighlight: {
@@ -124,10 +163,8 @@ const styleSheet = createStyles(theme => ({
 		left: 0,
 		right: 0,
 		height: ITEM_HEIGHT,
-		backgroundColor: 'rgba(99, 102, 241, 0.2)',
-		borderTopWidth: 1,
-		borderBottomWidth: 1,
-		borderColor: '#6366f1',
+		backgroundColor: theme.primary,
+		opacity: 0.1,
 		borderRadius: 8,
 		zIndex: 1,
 	},
@@ -144,6 +181,5 @@ const styleSheet = createStyles(theme => ({
 	selected: {
 		marginTop: 32,
 		fontSize: 16,
-		color: '#94a3b8',
 	},
 }))

@@ -1,4 +1,10 @@
-import { BottomSheetModal, type BottomSheetModalProps, BottomSheetView } from '@gorhom/bottom-sheet'
+import {
+	BottomSheetModal,
+	BottomSheetBackdrop,
+	type BottomSheetModalProps,
+	BottomSheetView,
+	type BottomSheetBackdropProps,
+} from '@gorhom/bottom-sheet'
 import { createContext, type PropsWithChildren, useCallback, useContext, useRef } from 'react'
 import type { PressableProps, StyleProp, ViewStyle } from 'react-native'
 import { Pressable } from 'react-native'
@@ -22,7 +28,6 @@ export function BottomSheet(props: PropsWithChildren) {
 	const open = useCallback(() => {
 		if (ref.current) {
 			ref.current?.present()
-		} else {
 		}
 	}, [])
 	const close = useCallback(() => ref.current?.dismiss(), [])
@@ -38,16 +43,25 @@ function useBottonSheet() {
 export function BottomSheetContent(props: BottomSheetProps) {
 	const { styles } = useStyles(styleSheet)
 	const { ref } = useBottonSheet()
+
+	const renderBackdrop = useCallback(
+		(backdropProps: BottomSheetBackdropProps) => (
+			<BottomSheetBackdrop {...backdropProps} disappearsOnIndex={-1} appearsOnIndex={0} pressBehavior='close' />
+		),
+		[],
+	)
+
 	return (
 		<BottomSheetModal
 			{...props}
 			ref={ref}
 			stackBehavior='push'
+			backdropComponent={renderBackdrop}
 			handleStyle={[styles.handle, props.handleStyle]}
 			handleIndicatorStyle={[styles.indicator, props.handleIndicatorStyle]}
 			backgroundStyle={[styles.sheetBackground, props.backgroundStyle]}
-			onChange={(e, postion, type) => {
-				props.onChange?.(e, postion, type)
+			onChange={(e, position, type) => {
+				props.onChange?.(e, position, type)
 			}}
 		>
 			<BottomSheetView style={props.view}>{props.children}</BottomSheetView>
@@ -57,7 +71,6 @@ export function BottomSheetContent(props: BottomSheetProps) {
 
 export function BottomSheetTrigger(props: PressableProps) {
 	const { open } = useBottonSheet()
-
 	return (
 		<Pressable
 			{...props}
@@ -68,6 +81,7 @@ export function BottomSheetTrigger(props: PressableProps) {
 		/>
 	)
 }
+
 const styleSheet = createStyles(theme => ({
 	contentContainer: {
 		flex: 1,
