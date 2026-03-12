@@ -1,7 +1,7 @@
 import { ThemedText } from '@/components/themed-text'
 import { ThemedView } from '@/components/themed-view'
 
-export default function ProfileTab() {
+export default function TabScreen() {
 	return (
 		<ThemedView
 			style={{
@@ -10,7 +10,7 @@ export default function ProfileTab() {
 				alignItems: 'center',
 			}}
 		>
-			<ThemedText>hellow world</ThemedText>
+			<ThemedText>Profile</ThemedText>
 		</ThemedView>
 	)
 }

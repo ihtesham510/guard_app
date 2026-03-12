@@ -4,10 +4,13 @@ import { StatusBar } from 'expo-status-bar'
 import 'react-native-reanimated'
 
 import { ConvexBetterAuthProvider } from '@convex-dev/better-auth/react'
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { ConvexProvider, ConvexReactClient } from 'convex/react'
 import * as SplashScreen from 'expo-splash-screen'
 import { type PropsWithChildren, useEffect } from 'react'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useColorScheme } from '@/hooks/use-color-scheme'
+import { createStyles, useStyles } from '@/hooks/use-styles'
 import { authClient } from '@/lib/auth-client'
 
 export const unstable_settings = {
@@ -25,6 +28,7 @@ export default function RootLayout() {
 }
 
 function App() {
+	const { styles } = useStyles(styleSheet)
 	const session = authClient.useSession()
 
 	useEffect(() => {
@@ -35,25 +39,27 @@ function App() {
 
 	if (session.isPending) return null
 	return (
-		<>
-			<Stack
-				screenOptions={{
-					animation: 'none',
-				}}
-			>
-				<Stack.Protected guard={!session.isPending && !session.data}>
-					<Stack.Screen name='index' options={{ headerShown: false }} />
-				</Stack.Protected>
+		<GestureHandlerRootView style={styles.root}>
+			<BottomSheetModalProvider>
+				<Stack
+					screenOptions={{
+						animation: 'none',
+					}}
+				>
+					<Stack.Protected guard={!session.isPending && !session.data}>
+						<Stack.Screen name='index' options={{ headerShown: false }} />
+					</Stack.Protected>
 
-				<Stack.Protected guard={!session.isPending && !session.data}>
-					<Stack.Screen name='sign-up' options={{ headerShown: false }} />
-				</Stack.Protected>
-				<Stack.Protected guard={!session.isPending && !!session.data}>
-					<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-				</Stack.Protected>
-			</Stack>
-			<StatusBar style='auto' />
-		</>
+					<Stack.Protected guard={!session.isPending && !session.data}>
+						<Stack.Screen name='sign-up' options={{ headerShown: false }} />
+					</Stack.Protected>
+					<Stack.Protected guard={!session.isPending && !!session.data}>
+						<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+					</Stack.Protected>
+				</Stack>
+				<StatusBar style='auto' />
+			</BottomSheetModalProvider>
+		</GestureHandlerRootView>
 	)
 }
 
@@ -70,3 +76,9 @@ function Providers({ children }: PropsWithChildren) {
 		</ConvexProvider>
 	)
 }
+
+const styleSheet = createStyles(() => ({
+	root: {
+		flex: 1,
+	},
+}))

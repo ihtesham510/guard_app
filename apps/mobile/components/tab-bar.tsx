@@ -1,7 +1,7 @@
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import type { NavigationRoute, ParamListBase } from '@react-navigation/native'
 import { useEffect, useState } from 'react'
-import { type LayoutChangeEvent, TouchableOpacity } from 'react-native'
+import { type LayoutChangeEvent, Pressable } from 'react-native'
 import Animated, { interpolate, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { ThemedView } from '@/components/themed-view'
 import { createStyles, useStyles } from '@/hooks/use-styles'
@@ -126,7 +126,7 @@ function Tab(props: TabProps) {
 	})
 
 	return (
-		<TouchableOpacity
+		<Pressable
 			accessibilityRole='button'
 			accessibilityState={isFocused ? { selected: true } : {}}
 			testID={options.tabBarButtonTestID}
@@ -138,14 +138,14 @@ function Tab(props: TabProps) {
 				{options.tabBarIcon?.({
 					focused: isFocused,
 					size: 24,
-					color: isFocused ? theme.primaryForeground : theme.secondaryForeground,
+					color: isFocused ? theme.background : theme.text,
 				})}
 			</Animated.View>
 			<ThemedText
 				animated
 				style={[
 					{
-						color: isFocused ? theme.primaryForeground : theme.secondaryForeground,
+						color: theme.text,
 						fontSize: 12,
 					},
 					animatedTextStyle,
@@ -153,7 +153,7 @@ function Tab(props: TabProps) {
 			>
 				{label}
 			</ThemedText>
-		</TouchableOpacity>
+		</Pressable>
 	)
 }
 

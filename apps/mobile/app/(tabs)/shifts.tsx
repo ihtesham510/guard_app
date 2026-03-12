@@ -1,16 +1,20 @@
-import { ThemedText } from '@/components/themed-text'
+import { Calendar } from '@/components/calendar'
 import { ThemedView } from '@/components/themed-view'
+import { createStyles, useStyles } from '@/hooks/use-styles'
 
-export default function ShiftsTab() {
+export default function TabScreen() {
+	const { styles } = useStyles(styleSheet)
 	return (
-		<ThemedView
-			style={{
-				flex: 1,
-				justifyContent: 'center',
-				alignItems: 'center',
-			}}
-		>
-			<ThemedText>Shifts</ThemedText>
+		<ThemedView style={styles.container}>
+			<Calendar />
 		</ThemedView>
 	)
 }
+
+const styleSheet = createStyles(theme => ({
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+}))
