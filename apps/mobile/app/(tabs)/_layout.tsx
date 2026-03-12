@@ -1,4 +1,4 @@
-import { CalendarAnalysisIcon, Clock04Icon, Home04Icon, User03Icon } from '@hugeicons/core-free-icons'
+import { Calendar05Icon, CalendarAnalysisIcon, Home04Icon, User03Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react-native'
 import { Tabs } from 'expo-router'
 import { HapticTab } from '@/components/haptic-tab'
@@ -32,9 +32,9 @@ export default function TabLayout() {
 				<Tabs.Screen
 					name='shifts'
 					options={{
-						title: 'Shifts',
+						title: 'Schedule',
 						tabBarIcon: ({ color, size, focused }) => (
-							<HugeiconsIcon icon={Clock04Icon} color={color} size={size} strokeWidth={focused ? 2 : 1.4} />
+							<HugeiconsIcon icon={Calendar05Icon} color={color} size={size} strokeWidth={focused ? 2 : 1.4} />
 						),
 					}}
 				/>
