@@ -1,7 +1,9 @@
 import {
+	addYears,
 	DAYS,
 	eachDayOfInterval,
 	eachMonthOfInterval,
+	eachYearOfInterval,
 	endOfMonth,
 	endOfYear,
 	format,
@@ -10,6 +12,7 @@ import {
 	isSameMonth,
 	startOfMonth,
 	startOfYear,
+	subYears,
 } from '@repo/shared'
 import { useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
@@ -101,9 +104,15 @@ export function DateSelector({ current, onChange }: { current: Date; onChange: (
 		start: startOfYear(current),
 		end: endOfYear(current),
 	}).map(date => ({ label: format(date, 'MMM'), date }))
+
 	const days = eachDayOfInterval({
 		start: startOfMonth(current),
 		end: endOfMonth(current),
+	})
+
+	const years = eachYearOfInterval({
+		start: subYears(new Date(Date.now()), 5),
+		end: addYears(new Date(Date.now()), 5),
 	})
 
 	return (
@@ -119,33 +128,43 @@ export function DateSelector({ current, onChange }: { current: Date; onChange: (
 			}}
 		>
 			<WheelPicker
-				style={{ flex: 1, width: '50%' }}
-				render={item => {
-					return <ThemedText>{item.getDate()}</ThemedText>
-				}}
+				style={{ flex: 1, width: '30%' }}
+				render={item => <ThemedText>{item.getDate()}</ThemedText>}
 				items={days}
 				initialIndex={days.findIndex(item => isSameDay(item, current))}
-				indexSelected={days.findIndex(item => isSameDay(item, current))}
-				onSelect={item => {
-					onChange(item)
+				onIndexChange={index => {
+					const d = new Date(current)
+					d.setDate(days[index].getDate())
+					onChange(d)
 				}}
 			/>
 			<WheelPicker
-				style={{ flex: 1, width: '50%' }}
+				style={{ flex: 1, width: '30%' }}
 				initialIndex={months.findIndex(item => isSameMonth(item.date, current))}
-				indexSelected={months.findIndex(item => isSameMonth(item.date, current))}
-				render={item => {
-					return <ThemedText>{item.label}</ThemedText>
-				}}
+				render={item => <ThemedText>{item.label}</ThemedText>}
 				items={months}
-				onSelect={item => {
-					onChange(item.date)
+				onIndexChange={index => {
+					const d = new Date(current)
+					const lastDay = new Date(d.getFullYear(), months[index].date.getMonth() + 1, 0).getDate()
+					d.setDate(Math.min(d.getDate(), lastDay)) // guard against Jan 31 → Feb overflow
+					d.setMonth(months[index].date.getMonth())
+					onChange(d)
+				}}
+			/>
+			<WheelPicker
+				style={{ flex: 1, width: '30%' }}
+				initialIndex={years.findIndex(item => item.getFullYear() === current.getFullYear())}
+				render={item => <ThemedText>{item.getFullYear()}</ThemedText>}
+				items={years}
+				onIndexChange={index => {
+					const d = new Date(current)
+					d.setFullYear(years[index].getFullYear())
+					onChange(d)
 				}}
 			/>
 		</View>
 	)
 }
-
 const styleSheet = createStyles(theme => ({
 	container: {
 		flex: 1,

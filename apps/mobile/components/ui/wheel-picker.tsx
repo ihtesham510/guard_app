@@ -1,13 +1,22 @@
-import { type ReactNode, useEffect, useRef, useState } from 'react'
-import { type NativeScrollEvent, type NativeSyntheticEvent, Pressable, View } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
-import { createStyles, useStyles } from '@/hooks/use-styles'
-import { useDebouncedCallback } from '@mantine/hooks'
-import Animated, { interpolate, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
+import { type ReactNode, useRef } from 'react'
 import type { StyleProp, ViewStyle } from 'react-native'
+import { View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
+import Animated, {
+	interpolate,
+	type SharedValue,
+	useAnimatedScrollHandler,
+	useAnimatedStyle,
+	useSharedValue,
+	withSpring,
+} from 'react-native-reanimated'
+import { createStyles, useStyles } from '@/hooks/use-styles'
 
-const ITEM_HEIGHT = 50
-const VISIBLE_ITEMS = 5
+const AnimatedGHFlatList = Animated.createAnimatedComponent(FlatList)
+
+const __ITEM_HEIGHT = 50
+const __VISIBLE_ITEMS = 5
+const __WIDTH = __ITEM_HEIGHT * __VISIBLE_ITEMS
 
 export interface DateItem {
 	value: Date
@@ -16,134 +25,81 @@ export interface DateItem {
 
 interface WheelPickerProps<T> {
 	items: T[]
-	selected?: T
-	onSelect?: (item: T) => void
-	indexSelected?: number
-	render: (item: T, isSelected: boolean) => ReactNode
+	onIndexChange?: (index: number) => void
+	render: (item: T) => ReactNode
 	initialIndex?: number
 	style?: StyleProp<ViewStyle>
 }
 
-export function WheelPicker<T>({ items, onSelect, initialIndex = 0, render, style, selected, indexSelected }: WheelPickerProps<T>) {
+export function WheelPicker<T>({ items, onIndexChange, initialIndex = 0, render, style }: WheelPickerProps<T>) {
 	const { styles } = useStyles(styleSheet)
-	const scrollRef = useRef<ScrollView>(null)
-	const selectedIndexRef = useRef<number>(initialIndex)
-	const [selectedIndex, setSelectedIndex] = useState<number>(initialIndex)
-	const debouce = useDebouncedCallback((clamped: number) => {
-		onSelect?.(items[clamped])
-	}, 300)
-
-	const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>): void => {
-		const y = event.nativeEvent.contentOffset.y
-		const index = Math.round(y / ITEM_HEIGHT)
-		const clamped = Math.max(0, Math.min(index, items.length - 1))
-		if (clamped !== selectedIndexRef.current) {
-			selectedIndexRef.current = clamped
-			setSelectedIndex(clamped)
-			debouce(clamped)
-		}
-	}
-
-	const scrollToIndex = (index: number): void => {
-		selectedIndexRef.current = index
-		scrollRef.current?.scrollTo({ y: index * ITEM_HEIGHT, animated: true })
-		setSelectedIndex(index)
-	}
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <cannot use function because it causes infinite loop>
-	useEffect(() => {
-		if (selected) {
-			const index = items.indexOf(selected)
-			if (index !== -1) {
-				scrollToIndex(index)
-			}
-		}
-	}, [selected])
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <cannot use function because it causes infinite loop>
-	useEffect(() => {
-		if (indexSelected !== undefined && selectedIndex !== -1) {
-			scrollToIndex(indexSelected)
-		}
-	}, [indexSelected])
-
+	const scrollX = useSharedValue(0)
+	const onScroll = useAnimatedScrollHandler(e => {
+		const value = e.contentOffset.y / __ITEM_HEIGHT
+		scrollX.value = withSpring(value, {
+			duration: 20,
+		})
+	})
+	const listRef = useRef<FlatList>(null)
 	return (
 		<View style={[styles.wheelContainer, style]}>
 			<View style={styles.selectionHighlight} pointerEvents='none' />
-			<ScrollView
-				ref={scrollRef}
-				showsVerticalScrollIndicator={false}
-				snapToInterval={ITEM_HEIGHT}
-				decelerationRate='normal'
-				onScroll={handleScroll}
-				scrollEventThrottle={40}
+			<AnimatedGHFlatList
+				style={{ height: __ITEM_HEIGHT * __VISIBLE_ITEMS }} // ← key fix
+				data={items}
+				ref={listRef}
 				contentContainerStyle={{
-					paddingVertical: ITEM_HEIGHT * Math.floor(VISIBLE_ITEMS / 2),
+					paddingVertical: (__WIDTH - __ITEM_HEIGHT) / 2,
 				}}
-				contentOffset={{ x: 0, y: initialIndex * ITEM_HEIGHT }}
-			>
-				{items.map((item, index) => (
-					<RenderItem
-						item={item}
-						index={index}
-						selectedIndex={selectedIndex}
-						onSelect={(e, i) => {
-							onSelect?.(e)
-							selectedIndexRef.current = i
-							setSelectedIndex(i)
-							scrollToIndex(i)
-						}}
-						key={index}
-					>
-						{render(item, index === selectedIndex)}
-					</RenderItem>
-				))}
-			</ScrollView>
+				showsVerticalScrollIndicator={false}
+				keyExtractor={(_, index) => String(index)}
+				snapToInterval={__ITEM_HEIGHT} // ← snap per item
+				decelerationRate='normal' // ← snappy feel
+				onMomentumScrollEnd={e => {
+					const index = Math.round(e.nativeEvent.contentOffset.y / __ITEM_HEIGHT)
+					onIndexChange?.(index)
+				}}
+				scrollEventThrottle={16}
+				getItemLayout={(_, index) => ({
+					length: __ITEM_HEIGHT,
+					offset: __ITEM_HEIGHT * index,
+					index,
+				})}
+				initialScrollIndex={initialIndex}
+				onScroll={onScroll}
+				// biome-ignore lint/suspicious/noExplicitAny: <Item is type is T>
+				renderItem={(item: any) => (
+					<WheelItem item={item.item} scrollX={scrollX} index={item.index}>
+						{render(item.item)}
+					</WheelItem>
+				)}
+			/>
 		</View>
 	)
 }
-function RenderItem<T>({
+function WheelItem<T>({
 	children,
-	item,
+	scrollX,
 	index,
-	onSelect,
-	selectedIndex,
 }: {
 	item: T
-	index: number
-	selectedIndex: number
-	onSelect?: (e: T, index: number) => void
+	onSelect?: (e: T) => void
 	children: ReactNode
+	scrollX: SharedValue<number>
+	index: number
 }) {
 	const { styles } = useStyles(styleSheet)
-	const scaleValue = useSharedValue(0)
-	const opacityValue = useSharedValue(0)
-	useEffect(() => {
-		scaleValue.value = withSpring(selectedIndex === index ? 1 : 0, {
-			duration: 30,
-		})
-		opacityValue.value = selectedIndex === index ? 1 : selectedIndex - 1 === index || selectedIndex + 1 === index ? 0.5 : 0
-	}, [selectedIndex, index, scaleValue, opacityValue])
-	const animatedStyle = useAnimatedStyle(() => {
-		const scale = interpolate(scaleValue.value, [0, 1], [1, 1.5], 'clamp')
-		const opacity = interpolate(opacityValue.value, [0, 0.5, 1], [0.2, 0.5, 1], 'clamp')
+	const animatedStyles = useAnimatedStyle(() => {
 		return {
-			transform: [{ scale }],
-			opacity,
+			transform: [
+				{
+					scale: interpolate(scrollX.value, [index - 1, index, index + 1], [1, 1.2, 1]),
+				},
+			],
+			opacity: interpolate(scrollX.value, [index - 2, index - 1, index, index + 1, index + 2], [0.2, 0.5, 1, 0.5, 0.2]),
 		}
 	})
-
-	return (
-		<Animated.View key={index} style={[styles.item, animatedStyle]}>
-			<Pressable
-				onPress={() => {
-					onSelect?.(item, index)
-				}}
-			>
-				{children}
-			</Pressable>
-		</Animated.View>
-	)
+	return <Animated.View style={[styles.item, animatedStyles]}>{children}</Animated.View>
 }
 
 const styleSheet = createStyles(theme => ({
@@ -154,22 +110,22 @@ const styleSheet = createStyles(theme => ({
 		marginBottom: 32,
 	},
 	wheelContainer: {
-		height: ITEM_HEIGHT * VISIBLE_ITEMS,
-		position: 'relative',
+		height: __ITEM_HEIGHT * __VISIBLE_ITEMS,
+		overflow: 'hidden',
 	},
 	selectionHighlight: {
 		position: 'absolute',
-		top: ITEM_HEIGHT * Math.floor(VISIBLE_ITEMS / 2),
+		top: __ITEM_HEIGHT * Math.floor(__VISIBLE_ITEMS / 2),
 		left: 0,
 		right: 0,
-		height: ITEM_HEIGHT,
+		height: __ITEM_HEIGHT,
 		backgroundColor: theme.primary,
 		opacity: 0.1,
 		borderRadius: 8,
 		zIndex: 1,
 	},
 	item: {
-		height: ITEM_HEIGHT,
+		height: __ITEM_HEIGHT,
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
