@@ -34,7 +34,7 @@ export const Colors = {
 	},
 	dark: {
 		text: '#c1c1c1',
-		background: '#070503',
+		background: '#121212',
 		tint: '#e78a53',
 		icon: '#888888',
 		tabIconDefault: '#888888',
@@ -52,7 +52,7 @@ export const Colors = {
 		border: '#222222',
 		input: '#222222',
 		ring: '#e78a53',
-		card: '#121212',
+		card: '#242424',
 		cardForeground: '#c1c1c1',
 		popover: '#121113',
 		popoverForeground: '#c1c1c1',

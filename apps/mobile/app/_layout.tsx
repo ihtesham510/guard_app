@@ -8,9 +8,8 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { ConvexProvider, ConvexReactClient } from 'convex/react'
 import * as SplashScreen from 'expo-splash-screen'
 import { type PropsWithChildren, useEffect } from 'react'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { ThemedRootView } from '@/components/common/themed-root-view'
 import { useColorScheme } from '@/hooks/use-color-scheme'
-import { createStyles, useStyles } from '@/hooks/use-styles'
 import { authClient } from '@/lib/auth-client'
 
 export const unstable_settings = {
@@ -28,7 +27,6 @@ export default function RootLayout() {
 }
 
 function App() {
-	const { styles } = useStyles(styleSheet)
 	const session = authClient.useSession()
 
 	useEffect(() => {
@@ -39,7 +37,7 @@ function App() {
 
 	if (session.isPending) return null
 	return (
-		<GestureHandlerRootView style={styles.root}>
+		<ThemedRootView>
 			<BottomSheetModalProvider>
 				<Stack
 					screenOptions={{
@@ -59,7 +57,7 @@ function App() {
 				</Stack>
 				<StatusBar style='auto' />
 			</BottomSheetModalProvider>
-		</GestureHandlerRootView>
+		</ThemedRootView>
 	)
 }
 
@@ -76,9 +74,3 @@ function Providers({ children }: PropsWithChildren) {
 		</ConvexProvider>
 	)
 }
-
-const styleSheet = createStyles(() => ({
-	root: {
-		flex: 1,
-	},
-}))

@@ -1,5 +1,5 @@
 import { Pressable, type TextStyle, type ViewStyle } from 'react-native'
-import { ThemedText } from '@/components/themed-text'
+import { ThemedText } from '@/components/common/themed-text'
 import { createStyles, useStyles } from '@/hooks/use-styles'
 
 export function Button({

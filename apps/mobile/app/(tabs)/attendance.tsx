@@ -1,5 +1,5 @@
-import { ThemedText } from '@/components/themed-text'
-import { ThemedView } from '@/components/themed-view'
+import { ThemedText } from '@/components/common/themed-text'
+import { ThemedView } from '@/components/common/themed-view'
 
 export default function TabScreen() {
 	return (

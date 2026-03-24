@@ -3,9 +3,9 @@ import type { NavigationRoute, ParamListBase } from '@react-navigation/native'
 import { useEffect, useState } from 'react'
 import { type LayoutChangeEvent, Pressable } from 'react-native'
 import Animated, { interpolate, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
-import { ThemedView } from '@/components/themed-view'
+import { ThemedText } from '@/components/common/themed-text'
+import { ThemedView } from '@/components/common/themed-view'
 import { createStyles, useStyles } from '@/hooks/use-styles'
-import { ThemedText } from './themed-text'
 
 interface TabBarProps extends BottomTabBarProps {}
 

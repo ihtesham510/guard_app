@@ -11,11 +11,14 @@ export function createStyles<T extends NamedStyles>(factory: (theme: Theme) => T
 	return factory
 }
 
-export function useStyles<T extends NamedStyles>(factory: (theme: Theme) => T): { styles: T; theme: Theme } {
+export function useStyles<T extends NamedStyles>(factory?: (theme: Theme) => T): { styles: T; theme: Theme } {
 	const scheme = useColorScheme() ?? 'light'
 	const theme = Colors[scheme]
 
-	const styles = useMemo(() => StyleSheet.create(factory(theme)) as unknown as T, [factory, theme])
+	const styles = useMemo(
+		() => (factory ? (StyleSheet.create(factory(theme)) as unknown as T) : (StyleSheet.create({}) as unknown as T)),
+		[factory, theme],
+	)
 
 	return { styles, theme }
 }
