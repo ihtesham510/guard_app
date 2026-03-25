@@ -4,7 +4,7 @@ import { type LocationSchema, siteSchema } from '@repo/backend/schema'
 import { type Coordinates, getPolygonOverview } from '@repo/shared'
 import { useMutation, useQuery } from 'convex/react'
 import { convexToZod } from 'convex-helpers/server/zod3'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import type z from 'zod/v3'
@@ -25,6 +25,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import Stepper, { Step } from '@/components/ui/stepper'
 import { Textarea } from '@/components/ui/textarea'
+import { useFileUpload } from '@/hooks/use-file-upload'
 import { useIsMobile } from '@/hooks/use-mobile'
 
 const schema = convexToZod(siteSchema.omit('userId', 'location'))
@@ -32,9 +33,13 @@ const schema = convexToZod(siteSchema.omit('userId', 'location'))
 export function SiteDialog({ open, onOpenChange }: { open?: boolean; onOpenChange?: (e: boolean) => void }) {
 	const [currentStep, setCurrentStep] = useState(1)
 	const [location, setLocation] = useState<LocationSchema>()
+	const [pendingPictures, setPendingPictures] = useState<File[]>([])
+	const fileInputRef = useRef<HTMLInputElement>(null)
+
 	const addSite = useMutation(api.sites.addSite)
 	const companies = useQuery(api.company.getCompanies)
 	const isMobile = useIsMobile()
+	const uploadFile = useFileUpload()
 
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
@@ -44,20 +49,44 @@ export function SiteDialog({ open, onOpenChange }: { open?: boolean; onOpenChang
 	})
 
 	const handleSubmit = async (data: z.infer<typeof schema>) => {
-		if (location) {
-			try {
-				await addSite({ ...data, location })
-				toast.success('Site added')
-			} catch (err) {
-				console.error(err)
-				toast.error('Error while adding site')
-			}
+		if (!location) {
+			toast.error('Please select a location on the map')
+			return
+		}
+
+		try {
+			const uploadedPictures = await Promise.all(
+				pendingPictures.map(async file => {
+					const { url, storageId } = await uploadFile(file)
+					return { url, storage_id: storageId }
+				}),
+			)
+			await addSite({ ...data, location, pictures: uploadedPictures })
+			form.reset()
+			setLocation(undefined)
+			setPendingPictures([])
+			toast.success('Site added')
+			onOpenChange?.(false)
+		} catch (err) {
+			console.error(err)
+			toast.error('Error while adding site')
 		}
 	}
 
 	const handleSkipContact = () => {
 		form.setValue('contactInformation', undefined)
 		setCurrentStep(prev => prev + 2)
+	}
+
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const files = Array.from(e.target.files ?? [])
+		if (!files.length) return
+		setPendingPictures(prev => [...prev, ...files])
+		if (fileInputRef.current) fileInputRef.current.value = ''
+	}
+
+	const removePicture = (index: number) => {
+		setPendingPictures(prev => prev.filter((_, i) => i !== index))
 	}
 
 	const overViewCoord =
@@ -287,6 +316,104 @@ export function SiteDialog({ open, onOpenChange }: { open?: boolean; onOpenChang
 										</FormItem>
 									)}
 								/>
+							</FieldSet>
+						</Step>
+
+						{/* Step 6 — Pictures */}
+						<Step>
+							<FieldSet>
+								<div className='flex items-center justify-between mb-2'>
+									<div>
+										<FieldLegend>Site Pictures</FieldLegend>
+										<FieldDescription>
+											Upload photos of the site (optional). Pictures are uploaded when you submit the form.
+										</FieldDescription>
+									</div>
+									{/* Hidden native file input — triggered by the button below */}
+									<input ref={fileInputRef} type='file' accept='image/*' multiple className='hidden' onChange={handleFileChange} />
+									<Button type='button' variant='outline' size='sm' onClick={() => fileInputRef.current?.click()}>
+										Add Photos
+									</Button>
+								</div>
+
+								{pendingPictures.length === 0 ? (
+									<button
+										type='button'
+										className='flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-lg p-8 text-muted-foreground cursor-pointer hover:bg-muted/40 transition-colors'
+										onClick={() => fileInputRef.current?.click()}
+									>
+										<svg
+											xmlns='http://www.w3.org/2000/svg'
+											className='h-8 w-8 opacity-40'
+											fill='none'
+											viewBox='0 0 24 24'
+											stroke='currentColor'
+											strokeWidth={1.5}
+										>
+											<title>upload icon</title>
+											<path
+												strokeLinecap='round'
+												strokeLinejoin='round'
+												d='M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3 9.75h.008v.008H3V9.75zm0 4.5h.008v.008H3v-.008zm18-4.5h.008v.008H21V9.75zm0 4.5h.008v.008H21v-.008zM12 6.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
+											/>
+										</svg>
+										<span className='text-sm'>Click to add photos</span>
+									</button>
+								) : (
+									<div className='grid grid-cols-3 gap-2'>
+										{pendingPictures.map((file, index) => {
+											const objectUrl = URL.createObjectURL(file)
+											return (
+												<div key={index} className='relative group aspect-square rounded-md overflow-hidden border'>
+													<img
+														src={objectUrl}
+														alt={file.name}
+														className='w-full h-full object-cover'
+														// Revoke the object URL once the image has loaded to free memory
+														onLoad={e => URL.revokeObjectURL((e.target as HTMLImageElement).src)}
+													/>
+													<button
+														type='button'
+														onClick={() => removePicture(index)}
+														className='absolute top-1 right-1 bg-black/60 hover:bg-black/80 text-white rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity'
+														aria-label='Remove picture'
+													>
+														<svg xmlns='http://www.w3.org/2000/svg' className='h-3 w-3' viewBox='0 0 20 20' fill='currentColor'>
+															<title>upload icon</title>
+															<path
+																fillRule='evenodd'
+																d='M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z'
+																clipRule='evenodd'
+															/>
+														</svg>
+													</button>
+													<div className='absolute bottom-0 left-0 right-0 bg-black/40 text-white text-[10px] px-1 py-0.5 truncate'>
+														{file.name}
+													</div>
+												</div>
+											)
+										})}
+										{/* Add-more tile */}
+										<button
+											type='button'
+											onClick={() => fileInputRef.current?.click()}
+											className='aspect-square rounded-md border-2 border-dashed flex items-center justify-center text-muted-foreground hover:bg-muted/40 transition-colors'
+											aria-label='Add more photos'
+										>
+											<svg
+												xmlns='http://www.w3.org/2000/svg'
+												className='h-6 w-6 opacity-50'
+												fill='none'
+												viewBox='0 0 24 24'
+												stroke='currentColor'
+												strokeWidth={2}
+											>
+												<title>upload icon</title>
+												<path strokeLinecap='round' strokeLinejoin='round' d='M12 4v16m8-8H4' />
+											</svg>
+										</button>
+									</div>
+								)}
 							</FieldSet>
 						</Step>
 					</Stepper>
