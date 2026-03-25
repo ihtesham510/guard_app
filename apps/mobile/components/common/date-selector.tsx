@@ -35,8 +35,8 @@ export function DateSelector({ date = new Date(Date.now()), onChange }: { date?:
 	const years = useMemo(
 		() =>
 			eachYearOfInterval({
-				start: addYears(date, 5),
-				end: subYears(date, 5),
+				start: subYears(date, 5),
+				end: addYears(date, 5),
 			}),
 		[date],
 	)
@@ -57,9 +57,10 @@ export function DateSelector({ date = new Date(Date.now()), onChange }: { date?:
 				}}
 				render={date => <ThemedText>{format(date, 'd')}</ThemedText>}
 				onIndexChange={index => {
-					const selectedDay = days[index]
-					date.setDate(selectedDay.getDate())
-					onChange?.(date)
+					const selectedMonth = days[index]
+					const newDate = new Date(date)
+					newDate.setDate(selectedMonth.getDate())
+					onChange?.(newDate)
 				}}
 			/>
 			<WheelPicker
@@ -70,8 +71,9 @@ export function DateSelector({ date = new Date(Date.now()), onChange }: { date?:
 				render={date => <ThemedText>{format(date, 'MMM')}</ThemedText>}
 				onIndexChange={index => {
 					const selectedMonth = months[index]
-					date.setMonth(selectedMonth.getMonth())
-					onChange?.(date)
+					const newDate = new Date(date)
+					newDate.setMonth(selectedMonth.getMonth())
+					onChange?.(newDate)
 				}}
 			/>
 			<WheelPicker
@@ -82,8 +84,9 @@ export function DateSelector({ date = new Date(Date.now()), onChange }: { date?:
 				render={date => <ThemedText>{format(date, 'yyy')}</ThemedText>}
 				onIndexChange={index => {
 					const selectedYear = years[index]
-					date.setFullYear(selectedYear.getFullYear())
-					onChange?.(date)
+					const newDate = new Date(date)
+					newDate.setFullYear(selectedYear.getFullYear())
+					onChange?.(newDate)
 				}}
 			/>
 		</View>
