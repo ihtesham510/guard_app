@@ -32,7 +32,14 @@ export default function TabScreen() {
 		}
 	})
 	return (
-		<SafeAreaView style={{ flex: 1, backgroundColor: theme.background, padding: 20 }}>
+		<SafeAreaView
+			style={{
+				flex: 1,
+				backgroundColor: theme.background,
+				paddingHorizontal: 20,
+				paddingVertical: 5,
+			}}
+		>
 			<View
 				onLayout={e => {
 					setSize({
