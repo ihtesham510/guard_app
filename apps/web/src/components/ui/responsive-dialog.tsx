@@ -1,24 +1,8 @@
 import type { PropsWithChildren } from 'react'
 import type { FieldValues, UseFormReturn } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
-import {
-	Dialog,
-	DialogClose,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from '@/components/ui/dialog'
-import {
-	Drawer,
-	DrawerClose,
-	DrawerContent,
-	DrawerDescription,
-	DrawerFooter,
-	DrawerHeader,
-	DrawerTitle,
-} from '@/components/ui/drawer'
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import { Form } from '@/components/ui/form'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { cn } from '@/lib/utils'
@@ -37,25 +21,15 @@ export function ResponsiveDialog({
 	return <Dialog {...rest}>{children}</Dialog>
 }
 
-export function ResponsiveDialogContent({
-	children,
-	className,
-}: PropsWithChildren & { className?: string }) {
+export function ResponsiveDialogContent({ children, className }: PropsWithChildren & { className?: string }) {
 	const isMobile = useIsMobile()
 	if (isMobile) {
-		return (
-			<DrawerContent className={cn('min-h-max', className)}>
-				{children}
-			</DrawerContent>
-		)
+		return <DrawerContent className={cn('min-h-max', className)}>{children}</DrawerContent>
 	}
 	return <DialogContent className={cn('', className)}>{children}</DialogContent>
 }
 
-export function ResponsiveDialogHeader({
-	children,
-	className,
-}: PropsWithChildren & { className?: string }) {
+export function ResponsiveDialogHeader({ children, className }: PropsWithChildren & { className?: string }) {
 	const isMobile = useIsMobile()
 	if (isMobile) {
 		return <DrawerHeader className={cn('', className)}>{children}</DrawerHeader>
@@ -81,10 +55,7 @@ export function ResponsiveDialogForm<TFieldValues extends FieldValues>({
 		</Form>
 	)
 }
-export function ResponsiveDialogTitle({
-	children,
-	className,
-}: PropsWithChildren & { className?: string }) {
+export function ResponsiveDialogTitle({ children, className }: PropsWithChildren & { className?: string }) {
 	const isMobile = useIsMobile()
 	if (isMobile) {
 		return <DrawerTitle className={cn('', className)}>{children}</DrawerTitle>
@@ -92,29 +63,15 @@ export function ResponsiveDialogTitle({
 	return <DialogTitle className={cn('', className)}>{children}</DialogTitle>
 }
 
-export function ResponsiveDialogDescription({
-	children,
-	className,
-}: PropsWithChildren & { className?: string }) {
+export function ResponsiveDialogDescription({ children, className }: PropsWithChildren & { className?: string }) {
 	const isMobile = useIsMobile()
 	if (isMobile) {
-		return (
-			<DrawerDescription className={cn('', className)}>
-				{children}
-			</DrawerDescription>
-		)
+		return <DrawerDescription className={cn('', className)}>{children}</DrawerDescription>
 	}
-	return (
-		<DialogDescription className={cn('', className)}>
-			{children}
-		</DialogDescription>
-	)
+	return <DialogDescription className={cn('', className)}>{children}</DialogDescription>
 }
 
-export function ResoponsiveDrawerFooter({
-	children,
-	className,
-}: PropsWithChildren & { className?: string }) {
+export function ResoponsiveDrawerFooter({ children, className }: PropsWithChildren & { className?: string }) {
 	const isMobile = useIsMobile()
 	if (isMobile) {
 		return <DrawerFooter className={cn('', className)}>{children}</DrawerFooter>
@@ -122,10 +79,7 @@ export function ResoponsiveDrawerFooter({
 	return <DialogFooter>{children}</DialogFooter>
 }
 
-export function ResoponsiveDrawerClose({
-	children,
-	className,
-}: PropsWithChildren & { className?: string }) {
+export function ResoponsiveDrawerClose({ children, className }: PropsWithChildren & { className?: string }) {
 	const isMobile = useIsMobile()
 	if (isMobile) {
 		return <DrawerClose className={cn('', className)}>{children}</DrawerClose>

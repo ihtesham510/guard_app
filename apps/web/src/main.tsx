@@ -1,4 +1,5 @@
 import { createRouter, RouterProvider } from '@tanstack/react-router'
+import { useConvex } from 'convex/react'
 import ReactDOM from 'react-dom/client'
 import { Toaster } from 'sonner'
 import { ConvexProvider } from '@/components/providers/convex-provider'
@@ -36,12 +37,13 @@ if (!rootElement.innerHTML) {
 
 function App() {
 	const session = authClient.useSession()
+	const convex = useConvex()
 	if (session.isPending) {
 		return (
-			<div className='flex justify-center items-center h-screen w-full'>
+			<div className='flex h-screen w-full items-center justify-center'>
 				<Spinner className='size-8' />
 			</div>
 		)
 	}
-	return <RouterProvider router={router} context={{ authClient, session }} />
+	return <RouterProvider router={router} context={{ authClient, session, convex }} />
 }

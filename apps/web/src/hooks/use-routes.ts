@@ -42,6 +42,18 @@ export function useRoutes() {
 			label: 'Operations',
 			items: [
 				{
+					title: 'Schedules',
+					icon: CalendarFold,
+					description: "See you're schedules for employees and sites",
+					href: {
+						to: '/dashboard/schedules',
+					},
+					isActive: !!route({
+						to: '/dashboard/schedules',
+						fuzzy: false,
+					}),
+				},
+				{
 					title: 'Attendance',
 					icon: Clock,
 					description: 'See Employees attendance',
@@ -86,18 +98,6 @@ export function useRoutes() {
 					},
 					isActive: !!route({
 						to: '/dashboard/sites',
-						fuzzy: false,
-					}),
-				},
-				{
-					title: 'Schedules',
-					icon: CalendarFold,
-					description: "See you're schedules for employees and sites",
-					href: {
-						to: '/dashboard/schedules',
-					},
-					isActive: !!route({
-						to: '/dashboard/schedules',
 						fuzzy: false,
 					}),
 				},

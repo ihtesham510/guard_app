@@ -74,9 +74,9 @@ function RouteComponent() {
 
 	if (employees === undefined) {
 		return (
-			<div className='flex items-center justify-center min-h-100'>
+			<div className='flex min-h-100 items-center justify-center'>
 				<div className='text-center'>
-					<div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto' />
+					<div className='mx-auto h-12 w-12 animate-spin rounded-full border-primary border-b-2' />
 					<p className='mt-4 text-muted-foreground'>Loading employees...</p>
 				</div>
 			</div>
@@ -85,7 +85,7 @@ function RouteComponent() {
 
 	if (employees && employees.length === 0) {
 		return (
-			<div className='flex items-center justify-center min-h-100'>
+			<div className='flex min-h-100 items-center justify-center'>
 				<div className='text-center'>
 					<svg className='mx-auto h-12 w-12 text-muted-foreground' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
 						<title>no Employee</title>
@@ -96,8 +96,8 @@ function RouteComponent() {
 							d='M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z'
 						/>
 					</svg>
-					<h3 className='mt-2 text-sm font-medium text-foreground'>No employees</h3>
-					<p className='mt-1 text-sm text-muted-foreground'>Get started by adding your first employee.</p>
+					<h3 className='mt-2 font-medium text-foreground text-sm'>No employees</h3>
+					<p className='mt-1 text-muted-foreground text-sm'>Get started by adding your first employee.</p>
 				</div>
 			</div>
 		)
@@ -107,32 +107,32 @@ function RouteComponent() {
 		<div className='px-4 sm:px-6 lg:px-8'>
 			<div className='sm:flex sm:items-center'>
 				<div className='sm:flex-auto'>
-					<h1 className='text-xl font-semibold text-foreground'>Employees</h1>
-					<p className='mt-2 text-sm text-muted-foreground'>
+					<h1 className='font-semibold text-foreground text-xl'>Employees</h1>
+					<p className='mt-2 text-muted-foreground text-sm'>
 						A list of all employees including their contact details, position, and status.
 					</p>
 				</div>
 			</div>
 			<div className='mt-8 flex flex-col'>
-				<div className='-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8'>
+				<div className='-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8'>
 					<div className='inline-block min-w-full py-2 align-middle md:px-6 lg:px-8'>
 						<div className='overflow-hidden shadow-md ring-1 ring-border md:rounded-lg'>
 							<table className='min-w-full divide-y divide-border'>
 								<thead className='bg-muted/50'>
 									<tr>
-										<th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-foreground sm:pl-6'>
+										<th scope='col' className='py-3.5 pr-3 pl-4 text-left font-semibold text-foreground text-sm sm:pl-6'>
 											Employee
 										</th>
-										<th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-foreground'>
+										<th scope='col' className='px-3 py-3.5 text-left font-semibold text-foreground text-sm'>
 											Contact
 										</th>
-										<th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-foreground'>
+										<th scope='col' className='px-3 py-3.5 text-left font-semibold text-foreground text-sm'>
 											Position
 										</th>
-										<th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-foreground'>
+										<th scope='col' className='px-3 py-3.5 text-left font-semibold text-foreground text-sm'>
 											Hire Date
 										</th>
-										<th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-foreground'>
+										<th scope='col' className='px-3 py-3.5 text-left font-semibold text-foreground text-sm'>
 											Status
 										</th>
 									</tr>
@@ -144,7 +144,7 @@ function RouteComponent() {
 
 										return (
 											<tr key={employee._id}>
-												<td className='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-foreground sm:pl-6'>
+												<td className='whitespace-nowrap py-4 pr-3 pl-4 font-medium text-foreground text-sm sm:pl-6'>
 													<div className='flex items-center'>
 														{employee.profile_picture ? (
 															<img
@@ -153,25 +153,25 @@ function RouteComponent() {
 																alt={`${employee.firstName} ${employee.lastName}`}
 															/>
 														) : (
-															<div className='h-10 w-10 rounded-full bg-muted flex items-center justify-center'>
-																<span className='text-sm font-medium text-muted-foreground'>
+															<div className='flex h-10 w-10 items-center justify-center rounded-full bg-muted'>
+																<span className='font-medium text-muted-foreground text-sm'>
 																	{employee.firstName[0]?.toUpperCase()}
 																	{employee.lastName[0]?.toUpperCase()}
 																</span>
 															</div>
 														)}
 														<div className='ml-4'>
-															<div className='text-sm font-medium text-foreground'>
+															<div className='font-medium text-foreground text-sm'>
 																{employee.firstName} {employee.lastName}
 															</div>
-															<div className='text-sm text-muted-foreground'>{employee.employeeCode}</div>
+															<div className='text-muted-foreground text-sm'>{employee.employeeCode}</div>
 														</div>
 													</div>
 												</td>
 												<td className='whitespace-nowrap px-3 py-4 text-sm'>
 													<div>
-														<div className='text-sm text-foreground'>{employee.email}</div>
-														<div className='text-sm text-muted-foreground'>{employee.phone}</div>
+														<div className='text-foreground text-sm'>{employee.email}</div>
+														<div className='text-muted-foreground text-sm'>{employee.phone}</div>
 													</div>
 												</td>
 												<td className='whitespace-nowrap px-3 py-4 text-sm'>
@@ -179,7 +179,7 @@ function RouteComponent() {
 														{employee.position}
 													</Badge>
 												</td>
-												<td className='whitespace-nowrap px-3 py-4 text-sm text-muted-foreground'>{formatDate(employee.hireDate)}</td>
+												<td className='whitespace-nowrap px-3 py-4 text-muted-foreground text-sm'>{formatDate(employee.hireDate)}</td>
 												<td className='whitespace-nowrap px-3 py-4 text-sm'>
 													<Badge variant={statusProps.variant} className={cn(statusProps.className)}>
 														{employee.status}

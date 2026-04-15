@@ -16,20 +16,10 @@ export const ThemeToggleButton = ({
 			type='button'
 			variant='outline'
 			size='icon-sm'
-			className={cn(
-				'rounded-full transition-all duration-300 active:scale-95',
-				isDarkTheme ? 'text-white' : 'text-black',
-				className,
-			)}
+			className={cn('rounded-full transition-all duration-300 active:scale-95', isDarkTheme ? 'text-white' : 'text-black', className)}
 			onClick={onClick}
 		>
-			<svg
-				xmlns='http://www.w3.org/2000/svg'
-				aria-hidden='true'
-				fill='currentColor'
-				strokeLinecap='round'
-				viewBox='0 0 32 32'
-			>
+			<svg xmlns='http://www.w3.org/2000/svg' aria-hidden='true' fill='currentColor' strokeLinecap='round' viewBox='0 0 32 32'>
 				<clipPath id='skiper-btn-2'>
 					<motion.path
 						animate={{ y: isDarkTheme ? 10 : 0, x: isDarkTheme ? -12 : 0 }}
@@ -38,12 +28,7 @@ export const ThemeToggleButton = ({
 					/>
 				</clipPath>
 				<g clipPath='url(#skiper-btn-2)'>
-					<motion.circle
-						animate={{ r: isDarkTheme ? 10 : 8 }}
-						transition={{ ease: 'easeInOut', duration: 0.35 }}
-						cx='16'
-						cy='16'
-					/>
+					<motion.circle animate={{ r: isDarkTheme ? 10 : 8 }} transition={{ ease: 'easeInOut', duration: 0.35 }} cx='16' cy='16' />
 					<motion.g
 						animate={{
 							rotate: isDarkTheme ? -100 : 0,

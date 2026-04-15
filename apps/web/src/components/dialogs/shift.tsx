@@ -153,7 +153,7 @@ export function ShiftDialog({ open, onOpenChange }: { open?: boolean; onOpenChan
 							<FieldSet>
 								<FieldLegend>Shift Times</FieldLegend>
 								<FieldDescription>Set the start and end time for this shift.</FieldDescription>
-								<div className='flex justify-between items-center gap-2'>
+								<div className='flex items-center justify-between gap-2'>
 									<FormField
 										control={form.control}
 										name='start_time'
@@ -189,7 +189,7 @@ export function ShiftDialog({ open, onOpenChange }: { open?: boolean; onOpenChan
 							<FieldSet>
 								<FieldLegend>Shift Dates</FieldLegend>
 								<FieldDescription>Set the start and end date for this shift period.</FieldDescription>
-								<div className='flex justify-between items-center gap-2'>
+								<div className='flex items-center justify-between gap-2'>
 									<FormField
 										control={form.control}
 										name='start_date'
@@ -250,7 +250,7 @@ export function ShiftDialog({ open, onOpenChange }: { open?: boolean; onOpenChan
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>Select Off Days</FormLabel>
-												<div className='grid grid-cols-2 gap-2 mt-1'>
+												<div className='mt-1 grid grid-cols-2 gap-2'>
 													{ALL_DAYS.map(day => (
 														<FormItem key={day} className='flex items-center gap-2 space-y-0'>
 															<FormControl>

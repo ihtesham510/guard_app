@@ -10,8 +10,8 @@ function App() {
 	const { session, signOut } = useSession()
 	if (session.data) {
 		return (
-			<div className='flex flex-col gap-6 justify-center items-center h-screen w-full'>
-				<h1 className='text-3xl font-bold'>Welcome {session.data.user.name}</h1>
+			<div className='flex h-screen w-full flex-col items-center justify-center gap-6'>
+				<h1 className='font-bold text-3xl'>Welcome {session.data.user.name}</h1>
 				<Button onClick={signOut}>Sign out</Button>
 			</div>
 		)

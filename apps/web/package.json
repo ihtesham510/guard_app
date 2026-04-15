@@ -9,7 +9,7 @@
 		"dev": "vite dev --port 3000",
 		"build": "vite build",
 		"lint": "tsc && biome lint ",
-		"lint-fix": "biome lint . --fix && react-doctor . --fix",
+		"lint-fix": "biome check --write --unsafe . && react-doctor . --fix",
 		"doctor": "react-doctor --lint --dead-code .",
 		"doctor-check": "react-doctor --lint --dead-code --diff .",
 		"test": "vitest run"

@@ -95,7 +95,7 @@ export function NavUser({
 							}}
 						>
 							{signOutAction.isPending ? (
-								<div className='flex justify-center w-full'>
+								<div className='flex w-full justify-center'>
 									<LoaderCircle className='size-4 animate-spin' />
 								</div>
 							) : (

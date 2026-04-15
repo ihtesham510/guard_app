@@ -4,13 +4,7 @@ import { AnimatePresence } from 'motion/react'
 import React from 'react'
 import { Bar, BarChart, Cell, ReferenceLine, XAxis } from 'recharts'
 import { Badge } from '@/components/ui/badge'
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { type ChartConfig, ChartContainer } from '@/components/ui/chart'
 import { cn } from '@/lib/utils'
 
@@ -43,9 +37,7 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function ValueLineBarChart() {
-	const [activeIndex, setActiveIndex] = React.useState<number | undefined>(
-		undefined,
-	)
+	const [activeIndex, setActiveIndex] = React.useState<number | undefined>(undefined)
 
 	const maxValueIndex = React.useMemo(() => {
 		if (activeIndex !== undefined) {
@@ -78,9 +70,7 @@ export function ValueLineBarChart() {
 		<Card>
 			<CardHeader>
 				<CardTitle className='flex items-center gap-2'>
-					<span className={cn('text-2xl tracking-tighter')}>
-						${maxValueIndex.value}
-					</span>
+					<span className={cn('text-2xl tracking-tighter')}>${maxValueIndex.value}</span>
 					<Badge variant='secondary'>
 						<TrendingUp className='h-4 w-4' />
 						<span>5.2%</span>
@@ -99,13 +89,7 @@ export function ValueLineBarChart() {
 								left: CHART_MARGIN,
 							}}
 						>
-							<XAxis
-								dataKey='month'
-								tickLine={false}
-								tickMargin={10}
-								axisLine={false}
-								tickFormatter={value => value.slice(0, 3)}
-							/>
+							<XAxis dataKey='month' tickLine={false} tickMargin={10} axisLine={false} tickFormatter={value => value.slice(0, 3)} />
 							<Bar dataKey='desktop' fill='var(--color-desktop)' radius={4}>
 								{chartData.map((_, index) => (
 									<Cell
@@ -150,24 +134,12 @@ const CustomReferenceLabel: React.FC<CustomReferenceLabelProps> = props => {
 		const characterWidth = 8 // Average width of a character in pixels
 		const padding = 10
 		return value.toString().length * characterWidth + padding
-	}, [])
+	}, [value.toString])
 
 	return (
 		<>
-			<rect
-				x={x - CHART_MARGIN}
-				y={y - 9}
-				width={width}
-				height={18}
-				fill='var(--secondary-foreground)'
-				rx={4}
-			/>
-			<text
-				fontWeight={600}
-				x={x - CHART_MARGIN + 6}
-				y={y + 4}
-				fill='var(--primary-foreground)'
-			>
+			<rect x={x - CHART_MARGIN} y={y - 9} width={width} height={18} fill='var(--secondary-foreground)' rx={4} />
+			<text fontWeight={600} x={x - CHART_MARGIN + 6} y={y + 4} fill='var(--primary-foreground)'>
 				{value}
 			</text>
 		</>

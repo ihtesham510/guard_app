@@ -139,7 +139,7 @@ export function EmployeeDialog({ open, onOpenChange }: { open?: boolean; onOpenC
 						{/* Step 3 — Address lines */}
 						<Step>
 							<FieldSet>
-								<div className='flex items-center justify-between mb-2'>
+								<div className='mb-2 flex items-center justify-between'>
 									<div>
 										<FieldLegend>Employee Address</FieldLegend>
 										<FieldDescription>Provide employee's address.</FieldDescription>
@@ -186,7 +186,7 @@ export function EmployeeDialog({ open, onOpenChange }: { open?: boolean; onOpenC
 						{/* Step 4 — Location */}
 						<Step>
 							<FieldSet>
-								<div className='flex items-center justify-between mb-2'>
+								<div className='mb-2 flex items-center justify-between'>
 									<div>
 										<FieldLegend>Employee's Location</FieldLegend>
 										<FieldDescription>Provide employee's city, state, postal code and country.</FieldDescription>
@@ -201,7 +201,7 @@ export function EmployeeDialog({ open, onOpenChange }: { open?: boolean; onOpenC
 										Skip
 									</Button>
 								</div>
-								<div className='flex justify-between items-center gap-2'>
+								<div className='flex items-center justify-between gap-2'>
 									<FormField
 										control={form.control}
 										name='address.zip'
@@ -229,7 +229,7 @@ export function EmployeeDialog({ open, onOpenChange }: { open?: boolean; onOpenC
 										)}
 									/>
 								</div>
-								<div className='flex justify-between items-center gap-2'>
+								<div className='flex items-center justify-between gap-2'>
 									<FormField
 										control={form.control}
 										name='address.state'

@@ -386,7 +386,7 @@ export function MapAreaSelector({ onSelect, value }: Props) {
 				state.location.polygon.map((cor, index) => (
 					<MapMarker key={index} longitude={cor[0]} latitude={cor[1]} color='#114949'>
 						<MarkerContent>
-							<div className='size-4 rounded-full bg-blue-600 border border-white shadow-lg' />
+							<div className='size-4 rounded-full border border-white bg-blue-600 shadow-lg' />
 						</MarkerContent>
 					</MapMarker>
 				))}
@@ -398,7 +398,7 @@ export function MapAreaSelector({ onSelect, value }: Props) {
 					color='#114949'
 				>
 					<MarkerContent>
-						<div className='size-4 rounded-full bg-blue-600 border border-white shadow-lg' />
+						<div className='size-4 rounded-full border border-white bg-blue-600 shadow-lg' />
 					</MarkerContent>
 				</MapMarker>
 			)}
@@ -416,7 +416,7 @@ export function MapAreaSelector({ onSelect, value }: Props) {
 					<Button
 						size='sm'
 						variant='outline'
-						className='bg-background text-foreground border-border hover:bg-primary hover:text-primary-foreground gap-1.5'
+						className='gap-1.5 border-border bg-background text-foreground hover:bg-primary hover:text-primary-foreground'
 						onClick={() => handleStartSelecting('location')}
 					>
 						<Crosshair className='size-3.5' />
@@ -425,7 +425,7 @@ export function MapAreaSelector({ onSelect, value }: Props) {
 					<Button
 						size='sm'
 						variant='outline'
-						className='bg-background text-foreground border-border hover:bg-primary hover:text-primary-foreground gap-1.5'
+						className='gap-1.5 border-border bg-background text-foreground hover:bg-primary hover:text-primary-foreground'
 						onClick={() => handleStartSelecting('area')}
 					>
 						<Pentagon className='size-3.5' />
@@ -436,13 +436,13 @@ export function MapAreaSelector({ onSelect, value }: Props) {
 
 			{isSelectingLocation && !state.hasSelected && (
 				<div className='absolute bottom-4 left-4 z-10 flex items-center gap-2'>
-					<span className='text-xs text-muted-foreground bg-background/80 backdrop-blur px-2 py-1 rounded border border-border'>
+					<span className='rounded border border-border bg-background/80 px-2 py-1 text-muted-foreground text-xs backdrop-blur'>
 						{hasLocationPin ? 'Pin placed — confirm or re-click to move' : 'Click map to place pin'}
 					</span>
 					{hasLocationPin && (
 						<Button
 							size='sm'
-							className='bg-background text-foreground border-border border hover:bg-primary hover:text-primary-foreground gap-1.5'
+							className='gap-1.5 border border-border bg-background text-foreground hover:bg-primary hover:text-primary-foreground'
 							onClick={handleConfirmLocation}
 						>
 							<Check className='size-3.5' />
@@ -467,7 +467,7 @@ export function MapAreaSelector({ onSelect, value }: Props) {
 							}}
 						/>
 					)}
-					<Button size='sm' variant='ghost' className='text-muted-foreground hover:text-foreground gap-1.5' onClick={handleCancelSelecting}>
+					<Button size='sm' variant='ghost' className='gap-1.5 text-muted-foreground hover:text-foreground' onClick={handleCancelSelecting}>
 						Cancel
 					</Button>
 				</div>
@@ -475,7 +475,7 @@ export function MapAreaSelector({ onSelect, value }: Props) {
 
 			{isSelectingArea && !state.hasSelected && (
 				<div className='absolute bottom-4 left-4 z-10 flex items-center gap-2'>
-					<span className='text-xs text-muted-foreground bg-background/80 backdrop-blur px-2 py-1 rounded border border-border'>
+					<span className='rounded border border-border bg-background/80 px-2 py-1 text-muted-foreground text-xs backdrop-blur'>
 						{hasPolygonPoints
 							? `${(state.location as { polygon: Coordinates[] }).polygon.length} point(s) — ${canConfirmArea ? 'ready to confirm' : 'need at least 3'}`
 							: 'Click map to draw polygon'}
@@ -483,7 +483,7 @@ export function MapAreaSelector({ onSelect, value }: Props) {
 					{canConfirmArea && (
 						<Button
 							size='sm'
-							className='bg-background text-foreground border-border border hover:bg-primary hover:text-primary-foreground gap-1.5'
+							className='gap-1.5 border border-border bg-background text-foreground hover:bg-primary hover:text-primary-foreground'
 							onClick={handleConfirmArea}
 						>
 							<Check className='size-3.5' />
@@ -494,14 +494,14 @@ export function MapAreaSelector({ onSelect, value }: Props) {
 						<Button
 							size='sm'
 							variant='outline'
-							className='bg-background text-foreground border-border hover:bg-primary hover:text-primary-foreground gap-1.5'
+							className='gap-1.5 border-border bg-background text-foreground hover:bg-primary hover:text-primary-foreground'
 							onClick={handleResetArea}
 						>
 							<RotateCcw className='size-3.5' />
 							Reset
 						</Button>
 					)}
-					<Button size='sm' variant='ghost' className='text-muted-foreground hover:text-foreground gap-1.5' onClick={handleCancelSelecting}>
+					<Button size='sm' variant='ghost' className='gap-1.5 text-muted-foreground hover:text-foreground' onClick={handleCancelSelecting}>
 						Cancel
 					</Button>
 				</div>
@@ -509,7 +509,7 @@ export function MapAreaSelector({ onSelect, value }: Props) {
 
 			{state.hasSelected && (
 				<div className='absolute bottom-4 left-4 z-10 flex items-center gap-2'>
-					<span className='text-xs text-muted-foreground bg-background/80 backdrop-blur px-2 py-1 rounded border border-border'>
+					<span className='rounded border border-border bg-background/80 px-2 py-1 text-muted-foreground text-xs backdrop-blur'>
 						{state.location && 'polygon' in state.location
 							? `Area selected (${state.location.polygon.length} points)`
 							: 'Location selected'}
@@ -517,7 +517,7 @@ export function MapAreaSelector({ onSelect, value }: Props) {
 					<Button
 						size='sm'
 						variant='outline'
-						className='bg-background text-foreground border-border hover:bg-destructive hover:text-destructive-foreground gap-1.5'
+						className='gap-1.5 border-border bg-background text-foreground hover:bg-destructive hover:text-destructive-foreground'
 						onClick={() => {
 							removeLayer()
 							if (state.location && 'polygon' in state.location) {
@@ -564,7 +564,7 @@ function RadiusPopUp({
 			{!showPopup && (
 				<Button
 					size='sm'
-					className='bg-background text-foreground border-border border hover:bg-primary hover:text-primary-foreground gap-1.5'
+					className='gap-1.5 border border-border bg-background text-foreground hover:bg-primary hover:text-primary-foreground'
 					onClick={() => setShowPopup(true)}
 				>
 					Set Radius

@@ -46,15 +46,15 @@ function RouteComponent() {
 				collapsible='icon'
 			/>
 			<SidebarInset className='p-3'>
-				<header className='flex justify-between items-center mb-4 w-full'>
+				<header className='mb-4 flex w-full items-center justify-between'>
 					<span className='flex items-center gap-2'>
 						<SidebarTrigger className='size-4' />
 					</span>
-					<div className='flex gap-2 items-center'>
+					<div className='flex items-center gap-2'>
 						<ThemeToggle />
 						<Button variant='ghost' size='sm' className='relative'>
 							<Bell className='h-5 w-5' />
-							<Badge className='absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs bg-primary'>3</Badge>
+							<Badge className='absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary p-0 text-xs'>3</Badge>
 						</Button>
 					</div>
 				</header>

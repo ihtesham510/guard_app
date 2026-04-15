@@ -1,10 +1,6 @@
 import { Check, Copy } from 'lucide-react'
 import { useState } from 'react'
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 export function CopyButton({ text }: { text: string }) {
 	const [copied, setCopied] = useState(false)
@@ -26,8 +22,9 @@ export function CopyButton({ text }: { text: string }) {
 		<Tooltip delayDuration={1600}>
 			<TooltipTrigger asChild>
 				<button
+					type='button'
 					onClick={handleCopy}
-					className='rounded-lg transition-all duration-300 bg-transparent text-primary hover:bg-transparent px-2 py-0.5 cursor-pointer'
+					className='cursor-pointer rounded-lg bg-transparent px-2 py-0.5 text-primary transition-all duration-300 hover:bg-transparent'
 				>
 					{copied ? <Check className='size-3' /> : <Copy className='size-3' />}
 				</button>

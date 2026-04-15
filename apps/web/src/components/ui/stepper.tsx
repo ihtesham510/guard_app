@@ -88,9 +88,9 @@ export default function Stepper({
 	}
 	return (
 		<div className='flex min-h-full flex-1 flex-col items-center justify-center' {...rest}>
-			<div className={`w-full rounded-4xl  ${stepCircleContainerClassName}`}>
+			<div className={`w-full rounded-4xl ${stepCircleContainerClassName}`}>
 				{!hideSteps && (
-					<div className={`${stepContainerClassName} flex w-full items-center mt-4`}>
+					<div className={`${stepContainerClassName} mt-4 flex w-full items-center`}>
 						{stepsArray.map((_, index) => {
 							const stepNumber = index + 1
 							const isNotLastStep = index < totalSteps - 1
@@ -141,7 +141,7 @@ export default function Stepper({
 									variant='outline'
 									type='button'
 									className={cn(
-										'duration-350 rounded px-2 py-1 transition hover:text-neutral-700 ',
+										'rounded px-2 py-1 transition duration-350 hover:text-neutral-700',
 										currentStep === 1 && 'pointer-events-none opacity-50',
 									)}
 									{...backButtonProps}
@@ -153,7 +153,7 @@ export default function Stepper({
 								<Button
 									onClick={handleNext}
 									type='button'
-									className='duration-350 flex items-center justify-center rounded-md font-medium tracking-tight transition'
+									className='flex items-center justify-center rounded-md font-medium tracking-tight transition duration-350'
 									{...nextButtonProps}
 								>
 									{nextButtonText}
@@ -162,7 +162,7 @@ export default function Stepper({
 							{isLastStep && (
 								<Button
 									type='submit'
-									className='duration-350 flex items-center justify-center rounded-md font-medium tracking-tight transition'
+									className='flex items-center justify-center rounded-md font-medium tracking-tight transition duration-350'
 									disabled={rest.submitting}
 									{...nextButtonProps}
 								>
@@ -263,7 +263,7 @@ interface StepProps {
 }
 
 export function Step({ children }: StepProps) {
-	return <div className='px-1 py-1 mt-8 space-y-2'>{children}</div>
+	return <div className='mt-8 space-y-2 px-1 py-1'>{children}</div>
 }
 
 interface StepIndicatorProps {
@@ -330,7 +330,7 @@ function StepConnector({ isComplete }: StepConnectorProps) {
 	return (
 		<div className='relative mx-2 h-0.5 flex-1 overflow-hidden rounded bg-neutral-600'>
 			<motion.div
-				className='absolute left-0 top-0 h-full'
+				className='absolute top-0 left-0 h-full'
 				variants={lineVariants}
 				initial={false}
 				animate={isComplete ? 'complete' : 'incomplete'}

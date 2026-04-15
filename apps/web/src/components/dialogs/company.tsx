@@ -139,7 +139,7 @@ export function CompanyDialog({ open, onOpenChange }: { open?: boolean; onOpenCh
 							<FieldSet>
 								<FieldLegend>Company Location</FieldLegend>
 								<FieldDescription>Provide the city, state, postal code and country.</FieldDescription>
-								<div className='flex justify-between items-center gap-2'>
+								<div className='flex items-center justify-between gap-2'>
 									<FormField
 										control={form.control}
 										name='address.zip'
@@ -167,7 +167,7 @@ export function CompanyDialog({ open, onOpenChange }: { open?: boolean; onOpenCh
 										)}
 									/>
 								</div>
-								<div className='flex justify-between items-center gap-2'>
+								<div className='flex items-center justify-between gap-2'>
 									<FormField
 										control={form.control}
 										name='address.state'

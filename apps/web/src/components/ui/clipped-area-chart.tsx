@@ -1,18 +1,12 @@
 'use client'
 
-import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '@/components/ui/card'
-import { type ChartConfig, ChartContainer } from '@/components/ui/chart'
-import { Badge } from '@/components/ui/badge'
 import { TrendingDown } from 'lucide-react'
+import { useMotionValueEvent, useSpring } from 'motion/react'
 import { useRef, useState } from 'react'
-import { useSpring, useMotionValueEvent } from 'motion/react'
+import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { type ChartConfig, ChartContainer } from '@/components/ui/chart'
 
 const chartData = [
 	{ month: 'January', mobile: 245 },
@@ -67,11 +61,7 @@ export function ClippedAreaChart() {
 				<CardDescription>Total revenue for last year</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<ChartContainer
-					ref={chartRef}
-					className='h-54 w-full'
-					config={chartConfig}
-				>
+				<ChartContainer ref={chartRef} className='h-54 w-full' config={chartConfig}>
 					<AreaChart
 						className='overflow-visible'
 						accessibilityLayer
@@ -101,13 +91,7 @@ export function ClippedAreaChart() {
 								return [0, height - 30]
 							}}
 						/>
-						<XAxis
-							dataKey='month'
-							tickLine={false}
-							axisLine={false}
-							tickMargin={8}
-							tickFormatter={value => value.slice(0, 3)}
-						/>
+						<XAxis dataKey='month' tickLine={false} axisLine={false} tickMargin={8} tickFormatter={value => value.slice(0, 3)} />
 						<Area
 							dataKey='mobile'
 							type='monotone'
@@ -126,56 +110,18 @@ export function ClippedAreaChart() {
 							strokeLinecap='round'
 							strokeOpacity={0.2}
 						/>
-						<rect
-							x={axis - 50}
-							y={0}
-							width={50}
-							height={18}
-							fill='var(--color-mobile)'
-						/>
-						<text
-							x={axis - 25}
-							fontWeight={600}
-							y={13}
-							textAnchor='middle'
-							fill='var(--primary-foreground)'
-						>
+						<rect x={axis - 50} y={0} width={50} height={18} fill='var(--color-mobile)' />
+						<text x={axis - 25} fontWeight={600} y={13} textAnchor='middle' fill='var(--primary-foreground)'>
 							${springY.get().toFixed(0)}
 						</text>
 						{/* this is a ghost line behind graph */}
-						<Area
-							dataKey='mobile'
-							type='monotone'
-							fill='none'
-							stroke='var(--color-mobile)'
-							strokeOpacity={0.1}
-						/>
+						<Area dataKey='mobile' type='monotone' fill='none' stroke='var(--color-mobile)' strokeOpacity={0.1} />
 						<defs>
-							<linearGradient
-								id='gradient-cliped-area-mobile'
-								x1='0'
-								y1='0'
-								x2='0'
-								y2='1'
-							>
-								<stop
-									offset='5%'
-									stopColor='var(--color-mobile)'
-									stopOpacity={0.2}
-								/>
-								<stop
-									offset='95%'
-									stopColor='var(--color-mobile)'
-									stopOpacity={0}
-								/>
+							<linearGradient id='gradient-cliped-area-mobile' x1='0' y1='0' x2='0' y2='1'>
+								<stop offset='5%' stopColor='var(--color-mobile)' stopOpacity={0.2} />
+								<stop offset='95%' stopColor='var(--color-mobile)' stopOpacity={0} />
 								<mask id='mask-cliped-area-chart'>
-									<rect
-										x={0}
-										y={0}
-										width={'50%'}
-										height={'100%'}
-										fill='white'
-									/>
+									<rect x={0} y={0} width={'50%'} height={'100%'} fill='white' />
 								</mask>
 							</linearGradient>
 						</defs>

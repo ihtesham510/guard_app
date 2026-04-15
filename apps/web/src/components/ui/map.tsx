@@ -1,5 +1,4 @@
-'use client'
-
+/** biome-ignore-all lint/correctness/useExhaustiveDependencies: <cannot pass functions as dependencies> */
 import MapLibreGL, { type MarkerOptions, type PopupOptions } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { Loader2, Locate, Maximize, Minus, Plus, X } from 'lucide-react'
@@ -142,9 +141,9 @@ function DefaultLoader() {
 	return (
 		<div className='absolute inset-0 flex items-center justify-center'>
 			<div className='flex gap-1'>
-				<span className='size-1.5 rounded-full bg-muted-foreground/60 animate-pulse' />
-				<span className='size-1.5 rounded-full bg-muted-foreground/60 animate-pulse [animation-delay:150ms]' />
-				<span className='size-1.5 rounded-full bg-muted-foreground/60 animate-pulse [animation-delay:300ms]' />
+				<span className='size-1.5 animate-pulse rounded-full bg-muted-foreground/60' />
+				<span className='size-1.5 animate-pulse rounded-full bg-muted-foreground/60 [animation-delay:150ms]' />
+				<span className='size-1.5 animate-pulse rounded-full bg-muted-foreground/60 [animation-delay:300ms]' />
 			</div>
 		</div>
 	)
@@ -307,7 +306,7 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
 
 	return (
 		<MapContext.Provider value={contextValue}>
-			<div ref={containerRef} className={cn('relative w-full h-full', className)}>
+			<div ref={containerRef} className={cn('relative h-full w-full', className)}>
 				{!isLoaded && <DefaultLoader />}
 				{/* SSR-safe: children render only when map is loaded on client */}
 				{mapInstance && children}
@@ -541,7 +540,7 @@ function MarkerPopup({ children, className, closeButton = false, ...popupOptions
 	return createPortal(
 		<div
 			className={cn(
-				'relative rounded-md border bg-popover p-3 text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95',
+				'fade-in-0 zoom-in-95 relative animate-in rounded-md border bg-popover p-3 text-popover-foreground shadow-md',
 				className,
 			)}
 		>
@@ -623,7 +622,7 @@ function MarkerTooltip({ children, className, ...popupOptions }: MarkerTooltipPr
 	}
 
 	return createPortal(
-		<div className={cn('rounded-md bg-foreground px-2 py-1 text-xs text-background shadow-md animate-in fade-in-0 zoom-in-95', className)}>
+		<div className={cn('fade-in-0 zoom-in-95 animate-in rounded-md bg-foreground px-2 py-1 text-background text-xs shadow-md', className)}>
 			{children}
 		</div>,
 		container,
@@ -649,7 +648,7 @@ function MarkerLabel({ children, className, position = 'top' }: MarkerLabelProps
 		<div
 			className={cn(
 				'absolute left-1/2 -translate-x-1/2 whitespace-nowrap',
-				'text-[10px] font-medium text-foreground',
+				'font-medium text-[10px] text-foreground',
 				positionClasses[position],
 				className,
 			)}
@@ -685,7 +684,7 @@ const positionClasses = {
 
 function ControlGroup({ children }: { children: React.ReactNode }) {
 	return (
-		<div className='flex flex-col rounded-md border border-border bg-background shadow-sm overflow-hidden [&>button:not(:last-child)]:border-b [&>button:not(:last-child)]:border-border'>
+		<div className='flex flex-col overflow-hidden rounded-md border border-border bg-background shadow-sm [&>button:not(:last-child)]:border-border [&>button:not(:last-child)]:border-b'>
 			{children}
 		</div>
 	)
@@ -708,8 +707,8 @@ function ControlButton({
 			aria-label={label}
 			type='button'
 			className={cn(
-				'flex items-center justify-center size-8 hover:bg-accent dark:hover:bg-accent/40 transition-colors',
-				disabled && 'opacity-50 pointer-events-none cursor-not-allowed',
+				'flex size-8 items-center justify-center transition-colors hover:bg-accent dark:hover:bg-accent/40',
+				disabled && 'pointer-events-none cursor-not-allowed opacity-50',
 			)}
 			disabled={disabled}
 		>
@@ -932,7 +931,7 @@ function MapPopup({ longitude, latitude, onClose, children, className, closeButt
 	return createPortal(
 		<div
 			className={cn(
-				'relative rounded-md border bg-popover p-3 text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95',
+				'fade-in-0 zoom-in-95 relative animate-in rounded-md border bg-popover p-3 text-popover-foreground shadow-md',
 				className,
 			)}
 		>

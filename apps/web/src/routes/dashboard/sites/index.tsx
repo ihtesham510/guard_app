@@ -28,7 +28,7 @@ function SiteCardView({ sites }: { sites: Site[] }) {
 	const router = useRouter()
 
 	return (
-		<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
+		<div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
 			{sites.map(site => {
 				const firstPicture = site.pictures?.[0]
 				const imageUrl = firstPicture?.url ?? undefined
@@ -87,25 +87,22 @@ function SiteTableView({ sites }: { sites: Site[] }) {
 			<table className='min-w-full divide-y divide-border'>
 				<thead className='bg-muted/50'>
 					<tr>
-						<th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-foreground sm:pl-6'>
+						<th scope='col' className='py-3.5 pr-3 pl-4 text-left font-semibold text-foreground text-sm sm:pl-6'>
 							Site
 						</th>
-						<th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-foreground'>
+						<th scope='col' className='px-3 py-3.5 text-left font-semibold text-foreground text-sm'>
 							Address
 						</th>
-						<th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-foreground'>
+						<th scope='col' className='px-3 py-3.5 text-left font-semibold text-foreground text-sm'>
 							City
 						</th>
-						<th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-foreground'>
+						<th scope='col' className='px-3 py-3.5 text-left font-semibold text-foreground text-sm'>
 							Country
 						</th>
-						<th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-foreground'>
+						<th scope='col' className='px-3 py-3.5 text-left font-semibold text-foreground text-sm'>
 							Contact
 						</th>
-						<th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-foreground'>
-							Location
-						</th>
-						<th scope='col' className='relative py-3.5 pl-3 pr-4 sm:pr-6'>
+						<th scope='col' className='relative py-3.5 pr-4 pl-3 sm:pr-6'>
 							<span className='sr-only'>Actions</span>
 						</th>
 					</tr>
@@ -118,7 +115,7 @@ function SiteTableView({ sites }: { sites: Site[] }) {
 						return (
 							<tr
 								key={site._id}
-								className='cursor-pointer hover:bg-muted/30 transition-colors'
+								className='cursor-pointer transition-colors hover:bg-muted/30'
 								onClick={() =>
 									router.navigate({
 										to: '/dashboard/sites/$siteId',
@@ -126,31 +123,31 @@ function SiteTableView({ sites }: { sites: Site[] }) {
 									})
 								}
 							>
-								<td className='whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6'>
+								<td className='whitespace-nowrap py-4 pr-3 pl-4 text-sm sm:pl-6'>
 									<div className='flex items-center gap-3'>
-										<div className='h-10 w-10 rounded-md overflow-hidden bg-muted shrink-0'>
+										<div className='h-10 w-10 shrink-0 overflow-hidden rounded-md bg-muted'>
 											{imageUrl ? (
 												<img src={imageUrl} alt={site.name} className='h-full w-full object-cover' />
 											) : (
-												<div className='h-full w-full flex items-center justify-center'>
-													<span className='text-sm font-medium text-muted-foreground'>{site.name[0]?.toUpperCase()}</span>
+												<div className='flex h-full w-full items-center justify-center'>
+													<span className='font-medium text-muted-foreground text-sm'>{site.name[0]?.toUpperCase()}</span>
 												</div>
 											)}
 										</div>
-										<div className='text-sm font-medium text-foreground'>{site.name}</div>
+										<div className='font-medium text-foreground text-sm'>{site.name}</div>
 									</div>
 								</td>
-								<td className='px-3 py-4 text-sm text-muted-foreground'>
+								<td className='px-3 py-4 text-muted-foreground text-sm'>
 									<div>{site.address.addressline_1}</div>
 									{site.address.addressline_2 && <div>{site.address.addressline_2}</div>}
 									<div>{site.address.zip}</div>
 								</td>
-								<td className='whitespace-nowrap px-3 py-4 text-sm text-muted-foreground'>
+								<td className='whitespace-nowrap px-3 py-4 text-muted-foreground text-sm'>
 									<div>{site.address.city}</div>
 									<div>{site.address.state}</div>
 								</td>
-								<td className='whitespace-nowrap px-3 py-4 text-sm text-muted-foreground'>{site.address.country}</td>
-								<td className='px-3 py-4 text-sm text-muted-foreground'>
+								<td className='whitespace-nowrap px-3 py-4 text-muted-foreground text-sm'>{site.address.country}</td>
+								<td className='px-3 py-4 text-muted-foreground text-sm'>
 									{site.contactInformation ? (
 										<>
 											<div className='text-foreground'>{site.contactInformation.name}</div>
@@ -161,18 +158,8 @@ function SiteTableView({ sites }: { sites: Site[] }) {
 										<span className='text-muted-foreground/50'>—</span>
 									)}
 								</td>
-								<td className='whitespace-nowrap px-3 py-4 text-sm text-muted-foreground'>
-									{site.location.lat !== '' && site.location.long !== '' ? (
-										<div>
-											<div>{site.location.lat}</div>
-											<div>{site.location.long}</div>
-										</div>
-									) : (
-										<span className='text-muted-foreground/50'>—</span>
-									)}
-								</td>
 								<td
-									className='whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm sm:pr-6'
+									className='whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm sm:pr-6'
 									onKeyUp={e => e.stopPropagation()}
 									onKeyDown={e => e.stopPropagation()}
 									onClick={e => e.stopPropagation()}
@@ -215,9 +202,9 @@ function RouteComponent() {
 
 	if (sites === undefined) {
 		return (
-			<div className='flex items-center justify-center min-h-100'>
+			<div className='flex min-h-100 items-center justify-center'>
 				<div className='text-center'>
-					<div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto' />
+					<div className='mx-auto h-12 w-12 animate-spin rounded-full border-primary border-b-2' />
 					<p className='mt-4 text-muted-foreground'>Loading sites...</p>
 				</div>
 			</div>
@@ -226,7 +213,7 @@ function RouteComponent() {
 
 	if (sites.length === 0) {
 		return (
-			<div className='flex items-center justify-center min-h-100'>
+			<div className='flex min-h-100 items-center justify-center'>
 				<div className='text-center'>
 					<svg className='mx-auto h-12 w-12 text-muted-foreground' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
 						<title>No Sites</title>
@@ -238,8 +225,8 @@ function RouteComponent() {
 						/>
 						<path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M15 11a3 3 0 11-6 0 3 3 0 016 0z' />
 					</svg>
-					<h3 className='mt-2 text-sm font-medium text-foreground'>No sites</h3>
-					<p className='mt-1 text-sm text-muted-foreground'>Get started by adding your first site.</p>
+					<h3 className='mt-2 font-medium text-foreground text-sm'>No sites</h3>
+					<p className='mt-1 text-muted-foreground text-sm'>Get started by adding your first site.</p>
 				</div>
 			</div>
 		)
@@ -249,12 +236,12 @@ function RouteComponent() {
 		<div className='px-4 sm:px-6 lg:px-8'>
 			<div className='sm:flex sm:items-center'>
 				<div className='sm:flex-auto'>
-					<h1 className='text-xl font-semibold text-foreground'>Sites</h1>
-					<p className='mt-2 text-sm text-muted-foreground'>A list of all sites including their location, address, and contact details.</p>
+					<h1 className='font-semibold text-foreground text-xl'>Sites</h1>
+					<p className='mt-2 text-muted-foreground text-sm'>A list of all sites including their location, address, and contact details.</p>
 				</div>
-				<div className='mt-4 sm:mt-0 sm:ml-4 flex items-center gap-1 rounded-lg border border-border p-1'>
+				<div className='mt-4 flex items-center gap-1 rounded-lg border border-border p-1 sm:mt-0 sm:ml-4'>
 					<Button variant={viewMode === 'card' ? 'secondary' : 'ghost'} size='sm' className='h-8 px-3' onClick={() => setViewMode('card')}>
-						<LayoutGrid className='h-4 w-4 mr-1.5' />
+						<LayoutGrid className='mr-1.5 h-4 w-4' />
 						Cards
 					</Button>
 					<Button
@@ -263,7 +250,7 @@ function RouteComponent() {
 						className='h-8 px-3'
 						onClick={() => setViewMode('table')}
 					>
-						<List className='h-4 w-4 mr-1.5' />
+						<List className='mr-1.5 h-4 w-4' />
 						Table
 					</Button>
 				</div>

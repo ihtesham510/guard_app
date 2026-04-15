@@ -184,7 +184,7 @@ export function SiteDialog({ open, onOpenChange }: { open?: boolean; onOpenChang
 							<FieldSet>
 								<FieldLegend>Site Location</FieldLegend>
 								<FieldDescription>Provide the city, state, postal code and country.</FieldDescription>
-								<div className='flex justify-between items-center gap-2'>
+								<div className='flex items-center justify-between gap-2'>
 									<FormField
 										control={form.control}
 										name='address.zip'
@@ -212,7 +212,7 @@ export function SiteDialog({ open, onOpenChange }: { open?: boolean; onOpenChang
 										)}
 									/>
 								</div>
-								<div className='flex justify-between items-center gap-2'>
+								<div className='flex items-center justify-between gap-2'>
 									<FormField
 										control={form.control}
 										name='address.state'
@@ -248,7 +248,7 @@ export function SiteDialog({ open, onOpenChange }: { open?: boolean; onOpenChang
 							<FieldSet>
 								<FieldLegend>GPS Coordinates</FieldLegend>
 								<FieldDescription>Provide the site's latitude and longitude for map pinning.</FieldDescription>
-								<div className='w-full h-75 relative'>
+								<div className='relative h-75 w-full'>
 									<ShadcnMap
 										center={[overViewCoord[0], overViewCoord[1]]}
 										zoom={location && 'polygon' in location ? getPolygonOverview(location.polygon as Coordinates[]).zoom : 12}
@@ -262,7 +262,7 @@ export function SiteDialog({ open, onOpenChange }: { open?: boolean; onOpenChang
 						{/* Step 5 — Contact Information */}
 						<Step>
 							<FieldSet>
-								<div className='flex items-center justify-between mb-2'>
+								<div className='mb-2 flex items-center justify-between'>
 									<div>
 										<FieldLegend>Site Contact</FieldLegend>
 										<FieldDescription>Provide a contact person for this site.</FieldDescription>
@@ -322,7 +322,7 @@ export function SiteDialog({ open, onOpenChange }: { open?: boolean; onOpenChang
 						{/* Step 6 — Pictures */}
 						<Step>
 							<FieldSet>
-								<div className='flex items-center justify-between mb-2'>
+								<div className='mb-2 flex items-center justify-between'>
 									<div>
 										<FieldLegend>Site Pictures</FieldLegend>
 										<FieldDescription>
@@ -339,7 +339,7 @@ export function SiteDialog({ open, onOpenChange }: { open?: boolean; onOpenChang
 								{pendingPictures.length === 0 ? (
 									<button
 										type='button'
-										className='flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-lg p-8 text-muted-foreground cursor-pointer hover:bg-muted/40 transition-colors'
+										className='flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-8 text-muted-foreground transition-colors hover:bg-muted/40'
 										onClick={() => fileInputRef.current?.click()}
 									>
 										<svg
@@ -364,18 +364,18 @@ export function SiteDialog({ open, onOpenChange }: { open?: boolean; onOpenChang
 										{pendingPictures.map((file, index) => {
 											const objectUrl = URL.createObjectURL(file)
 											return (
-												<div key={index} className='relative group aspect-square rounded-md overflow-hidden border'>
+												<div key={index} className='group relative aspect-square overflow-hidden rounded-md border'>
 													<img
 														src={objectUrl}
 														alt={file.name}
-														className='w-full h-full object-cover'
+														className='h-full w-full object-cover'
 														// Revoke the object URL once the image has loaded to free memory
 														onLoad={e => URL.revokeObjectURL((e.target as HTMLImageElement).src)}
 													/>
 													<button
 														type='button'
 														onClick={() => removePicture(index)}
-														className='absolute top-1 right-1 bg-black/60 hover:bg-black/80 text-white rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity'
+														className='absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity hover:bg-black/80 group-hover:opacity-100'
 														aria-label='Remove picture'
 													>
 														<svg xmlns='http://www.w3.org/2000/svg' className='h-3 w-3' viewBox='0 0 20 20' fill='currentColor'>
@@ -387,7 +387,7 @@ export function SiteDialog({ open, onOpenChange }: { open?: boolean; onOpenChang
 															/>
 														</svg>
 													</button>
-													<div className='absolute bottom-0 left-0 right-0 bg-black/40 text-white text-[10px] px-1 py-0.5 truncate'>
+													<div className='absolute right-0 bottom-0 left-0 truncate bg-black/40 px-1 py-0.5 text-[10px] text-white'>
 														{file.name}
 													</div>
 												</div>
@@ -397,7 +397,7 @@ export function SiteDialog({ open, onOpenChange }: { open?: boolean; onOpenChang
 										<button
 											type='button'
 											onClick={() => fileInputRef.current?.click()}
-											className='aspect-square rounded-md border-2 border-dashed flex items-center justify-center text-muted-foreground hover:bg-muted/40 transition-colors'
+											className='flex aspect-square items-center justify-center rounded-md border-2 border-dashed text-muted-foreground transition-colors hover:bg-muted/40'
 											aria-label='Add more photos'
 										>
 											<svg
